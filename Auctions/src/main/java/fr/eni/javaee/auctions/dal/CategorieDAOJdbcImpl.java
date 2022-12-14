@@ -18,7 +18,7 @@ import fr.eni.javaee.auctions.dal.ConnectionProvider;
 public class CategorieDAOJdbcImpl implements CategorieDAO {
 
 	
-	private static final String SELECT_ALL = "SELECT libelle FROM CATEGORIES;";
+	private static final String SELECT_ALL = "SELECT no_categorie, libelle FROM CATEGORIES;";
 	
 	@Override
 	public List<Categorie> selectAll() {
