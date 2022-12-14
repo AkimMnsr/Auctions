@@ -13,11 +13,11 @@ public class CategorieManager {
  * 
  */
 	
-		private static Categorie instance;
+		private static CategorieManager instance;
 	
-		public static Categorie getInstance() {
+		public static CategorieManager getInstance() {
 			if(instance == null) {
-				instance = new Categorie();
+				instance = new CategorieManager();
 			}
 			return instance;
 		}
