@@ -31,15 +31,15 @@ header {
 	<header>
 		<div class="navbar">
 			<a id="logoAccueil" method="get" href="/Auctions/WelcomePageUser"><strong>ENI
-					- Auction</strong></a>
+					- Auctions</strong></a>
 		</div>
 		<div class="navbar">
 			<nav class="nav">
 				<a class="nav-link active" aria-current="page"
-					href="/Auctions/WelcomePageUser">Enchere</a> <a class="nav-link"
+					href="/Auctions/WelcomePageUser">Troc-Enchères</a> <a class="nav-link"
 					href="/Auctions/NewSale">Vendre un article</a> <a class="nav-link"
 					href="/Auctions/ProfilModification">Mon profil</a> <a
-					class="nav-link" href="/Auctions/WelcomePageVisitor">Deconnection</a>
+					class="nav-link" href="/Auctions/WelcomePageVisitor">Déconnexion</a>
 			</nav>
 		</div>
 

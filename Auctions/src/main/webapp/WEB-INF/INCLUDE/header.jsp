@@ -31,7 +31,7 @@ header {
 	<header>
 		<div class="navbar">
 			<a id="logoAccueil" href="/Auctions/WelcomePageVisitor"><strong>ENI
-					- Auction</strong></a>
+					- Auctions</strong></a>
 		</div>
 
 

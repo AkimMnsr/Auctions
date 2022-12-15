@@ -12,9 +12,6 @@
 	crossorigin="anonymous">
 <title>headeur visiteur</title>
 <style type="text/css">
-body {
-	text-align: center;
-}
 
 header {
 	display: flex;
@@ -36,12 +33,12 @@ header {
 	<header>
 		<div class="navbar">
 			<a id="logoAccueil" href="/Auctions/WelcomePageVisitor"><strong>ENI
-					- Auction</strong></a>
+					- Auctions</strong></a>
 		</div>
 		<div class="navbar">
 			<nav class="nav">
 				<a class="nav-link active" aria-current="page"
-					href="/Auctions/connexion">s'identifier / s'enregistrer</a>
+					href="/Auctions/connexion">S'identifier / s'enregistrer</a>
 
 			</nav>
 		</div>
