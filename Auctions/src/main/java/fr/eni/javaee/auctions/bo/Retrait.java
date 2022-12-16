@@ -11,17 +11,15 @@ public class Retrait implements Serializable {
 	private String rue; 			//NOT NULL - VARCHAR(30)
 	private String codePostal; 		//NOT NULL - VARCHAR(15)
 	private String ville; 			//NOT NULL - VARCHAR(30)
-	private ArticleVendu article;
 	
 	//CONSTRUCTEUR VIDE
 	public Retrait( ) { }
 	
-	public Retrait(String rue, String codePostal, String ville, ArticleVendu article) {
+	public Retrait(String rue, String codePostal, String ville) {
 		this();
 		this.rue = rue;
 		this.codePostal = codePostal;
 		this.ville = ville;
-		this.article = article;
 	}
 
 
@@ -45,12 +43,7 @@ public class Retrait implements Serializable {
 	public void setVille(String ville) {
 		this.ville = ville;
 	}
-	public ArticleVendu getArticle() {
-		return article;
-	}
-	public void setArticle(ArticleVendu article) {
-		this.article = article;
-	}	
+	
 
 	
 
