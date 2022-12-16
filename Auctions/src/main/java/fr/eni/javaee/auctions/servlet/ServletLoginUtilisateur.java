@@ -48,10 +48,11 @@ public class ServletLoginUtilisateur extends HttpServlet {
 		} catch (SQLException | BusinessException e) {			
 			e.printStackTrace();
 			request.setAttribute("listeCodeErreur", ((BusinessException) e).getListeCodesErreur());
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/loginUtilisateur.jsp");
+			rd.forward(request, response);
 		}	
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/loginUtilisateur.jsp");
-		rd.forward(request, response);
+		
 	}
 
 }
