@@ -40,15 +40,7 @@ public class ServletLoginUtilisateur extends HttpServlet {
 			Utilisateur utilisateur = UtilisateurManager.getInstance().verifUtilisateur(pseudo, mdp);
 			System.out.println(utilisateur); // a supprimer a la fin
 			if (utilisateur != null) {
-				HttpSession session = request.getSession(true);
-				session.setAttribute("pseudo", utilisateur.getPseudo());
-				session.setAttribute("nom", utilisateur.getNom());
-				session.setAttribute("prenom", utilisateur.getPrenom());
-				session.setAttribute("telephone", utilisateur.getTelephone());
-				session.setAttribute("email", utilisateur.getEmail());
-				session.setAttribute("rue", utilisateur.getRue());
-				session.setAttribute("codePostal", utilisateur.getCodePostal());
-				session.setAttribute("ville", utilisateur.getVille());
+				HttpSession session = request.getSession(true);			
 				session.setAttribute("utilisateur", utilisateur);
 				RequestDispatcher rd = request.getRequestDispatcher("/WelcomePageUser");
 				rd.forward(request, response);

@@ -45,21 +45,12 @@ public class ServletCreationUtilisateur extends HttpServlet {
 		
 
 		try {		
-			Utilisateur newUser = UtilisateurManager.getInstance().insert(pseudo, nom, prenom, email, telephone, rue,
+			Utilisateur utilisateur = UtilisateurManager.getInstance().insert(pseudo, nom, prenom, email, telephone, rue,
 					codePostal, ville, motDePasse, credit, administrateur, validationMDP);
-			System.out.println(newUser);		
-			if (newUser != null) {
-			 	HttpSession session = request.getSession(true);
-				session.setAttribute("pseudo", newUser.getPseudo());
-				session.setAttribute("pseudo", newUser.getPseudo());
-				session.setAttribute("nom", newUser.getNom());
-				session.setAttribute("prenom", newUser.getPrenom());
-				session.setAttribute("telephone", newUser.getTelephone());
-				session.setAttribute("email", newUser.getEmail());
-				session.setAttribute("rue", newUser.getRue());
-				session.setAttribute("codePostal", newUser.getCodePostal());
-				session.setAttribute("ville", newUser.getVille());
-				session.setAttribute("utilisateur", newUser);	
+			System.out.println(utilisateur);		
+			if (utilisateur != null) {
+			 	HttpSession session = request.getSession(true);			
+				session.setAttribute("utilisateur", utilisateur);	
 				RequestDispatcher rd = request.getRequestDispatcher("/WelcomePageUser");
 				rd.forward(request, response);
 			} 

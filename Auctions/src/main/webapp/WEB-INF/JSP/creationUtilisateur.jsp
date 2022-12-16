@@ -47,7 +47,7 @@
 		%>
 	</div>
 	<div id="generalDiv">
-		<form method="post" action="/Auctions/ProfilCreation">
+		<form method="post" action="${pageContext.request.contextPath }/ProfilCreation">
 			<input name="pseudo" type="text" placeholder="Votre pseudo">
 			<input name="nom" type="text" placeholder="Nom"> 
 			<input name="prenom" type="text" placeholder="Prenom"> 
@@ -58,10 +58,10 @@
 			<input name="ville" type="text" placeholder="Ville"> 
 			<input name="mdp" type="password" placeholder="Password"> 
 			<input name="mdpConfirmation" type="password" placeholder="Password">
-			<button type="submit">Créer</button>
+			<input type="submit" type="submit" value="Créer">
 		</form>
 
-		<form method="get" action="/Auctions/WelcomePageUser">
+		<form method="get" action="${pageContext.request.contextPath }/WelcomePageUser">
 			<input type="submit" value="annuler">
 		</form>
 	</div>

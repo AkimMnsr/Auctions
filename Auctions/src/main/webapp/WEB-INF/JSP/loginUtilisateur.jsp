@@ -41,7 +41,9 @@
 		<%
 		for (int code : listeCodesErreur) {
 		%>
-		<p> - <%=lecteurMessages.getMessageErreur(code)%></p>
+		<p>
+			-
+			<%=lecteurMessages.getMessageErreur(code)%></p>
 		<%
 		}
 		}
@@ -50,22 +52,16 @@
 
 
 	<form id="formulaire" method="post" action="/Auctions/connexion">
-
 		<label for="inputId">Identifiant</label> <input name="identifiant"
 			type="text" id="inputId"> <label for="inputPassword3">Password</label>
 		<input name="mot_de_passe" type="password" id="inputPassword3">
 
-		<input type="checkbox">Se souvenir de moi
-
-
-		<button id="boutonSubmit" type="submit">Connexion</button>
-
+		<input type="checkbox">Se souvenir de moi <input type="submit"
+			id="boutonSubmit" type="submit" value="Connexion">
 	</form>
 
-
-
 	<form action="/Auctions/ProfilCreation">
-		<button type="submit">Créer un compte</button>
+		<input type="submit" value="Créer un compte">
 	</form>
 
 </body>

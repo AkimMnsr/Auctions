@@ -34,7 +34,7 @@ header {
 					- Auctions</strong></a>
 		</div>
 		<div>
-		Connecté(e) en tant que ${sessionScope.pseudo }
+		Connecté(e) en tant que ${sessionScope.utilisateur.pseudo }
 		</div>
 
 

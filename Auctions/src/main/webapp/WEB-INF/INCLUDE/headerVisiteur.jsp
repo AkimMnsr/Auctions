@@ -35,7 +35,7 @@ header {
 			<a id="logoAccueil" href="/Auctions/WelcomePageUser"><strong>ENI
 					- Auctions</strong></a>
 		</div>
-		Bienvenue ${sessionScope.pseudo }
+		Bienvenue ${sessionScope.utilisateur.pseudo }
 		<div class="navbar">
 			<nav class="nav">
 				<a class="nav-link active" aria-current="page"

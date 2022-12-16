@@ -36,7 +36,7 @@ header {
 		</div>
 		
 		<div>
-		Bienvenue ${sessionScope.pseudo }
+		Bienvenue ${sessionScope.utilisateur.pseudo }
 		</div>
 		<div class="navbar">
 			<nav class="nav">

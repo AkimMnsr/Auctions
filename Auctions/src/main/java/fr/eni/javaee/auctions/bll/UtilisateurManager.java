@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 import fr.eni.javaee.auctions.dal.DAOFactory;
+import fr.eni.javaee.auctions.dal.UtilisateurDAO;
 
 public class UtilisateurManager {
 
@@ -59,7 +60,34 @@ public class UtilisateurManager {
 		return DAOFactory.getUtilisateurDAO().verifUtilisateur(pseudo, mdp);
 	}
 	
-	// TO DO: method modifier (update)
+	public void modifier (Utilisateur utilisateur, String pseudo, String motDePasse, String nouveauMDP, String confirmationMdp) {
+		try {
+			Utilisateur verif = verifUtilisateur(pseudo,motDePasse );
+			if(utilisateur.equals(verif)){
+				BusinessException be = new BusinessException();
+				validerPseudo(utilisateur.getPseudo(), be);
+				validerNom(utilisateur.getNom(), be);
+				validerPrenom(utilisateur.getPrenom(), be);
+				validerEmail(utilisateur.getEmail(), be);
+				validerTelephone(utilisateur.getTelephone(), be);
+				validerRue(utilisateur.getRue(), be);
+				validerCodePostal(utilisateur.getCodePostal(), be);
+				validerVille(utilisateur.getVille(), be);
+				validerMotDePasse(utilisateur.getMotDePasse(), be);
+				validerMDPCorrect(nouveauMDP, confirmationMdp, be);
+				if (be.hasErreurs()) {
+					throw be;
+				}
+			}
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		} catch (BusinessException e) {			
+			e.printStackTrace();
+		}
+		
+		DAOFactory.getUtilisateurDAO().modifier(utilisateur);
+		
+	}
 
 	private void validerPseudoCNX(String pseudo, BusinessException be) {
 		if (pseudo == null || pseudo.isBlank() || pseudo.length() > 30) {

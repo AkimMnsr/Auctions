@@ -16,6 +16,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 
 
 	
+	
+	
+	
 	@Override
 	public void insert(Utilisateur utilisateur) throws SQLException, BusinessException {
 		
@@ -87,6 +90,12 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		}
 		System.out.println(utilisateurCnx);
 		return utilisateurCnx;
+	}
+
+	@Override
+	public void modifier(Utilisateur utilisateur) {
+		
+		
 	}
 
 	

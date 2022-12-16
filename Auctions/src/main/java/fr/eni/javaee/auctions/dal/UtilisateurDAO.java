@@ -11,5 +11,5 @@ public interface UtilisateurDAO {
 
 	Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException, BusinessException;
 
-	
+	void modifier(Utilisateur utilisateur);
 }
