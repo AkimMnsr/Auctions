@@ -34,11 +34,7 @@ public class ServletCreationVente extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		Utilisateur user = new Utilisateur("quentinSW", "swiderski", "quentin", "qsw@gmaill.com", "0711223344",
-				"4 boulevard Tortière", "44000", "Nantes", "quentinSW", 345, false);
-		user.setNoUtilisateur(9);
-		session.setAttribute("user", user);
-		// Utilisateur user = (Utilisateur)session.getAttribute("utilisateur");
+		Utilisateur user = (Utilisateur)session.getAttribute("utilisateur");
 
 		String nomArticle = request.getParameter("Article");
 		String description = request.getParameter("Description");
