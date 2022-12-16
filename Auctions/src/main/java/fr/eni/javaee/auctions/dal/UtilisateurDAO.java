@@ -7,8 +7,9 @@ import fr.eni.javaee.auctions.bo.Utilisateur;
 
 public interface UtilisateurDAO {
 	
-	void insert (Utilisateur utilisateur) throws BusinessException;	
+	void insert (Utilisateur utilisateur) throws SQLException, BusinessException;	
 
-	Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException;
+	Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException, BusinessException;
+
 	
 }

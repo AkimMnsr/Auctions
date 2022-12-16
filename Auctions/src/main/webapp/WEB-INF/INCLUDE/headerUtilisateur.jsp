@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,13 +34,18 @@ header {
 			<a id="logoAccueil" method="get" href="/Auctions/WelcomePageUser"><strong>ENI
 					- Auctions</strong></a>
 		</div>
+		
+		<div>
+		Bienvenue ${sessionScope.pseudo }
+		</div>
 		<div class="navbar">
 			<nav class="nav">
-				<a class="nav-link active" aria-current="page"
-					href="/Auctions/WelcomePageUser">Troc-Enchères</a> <a class="nav-link"
-					href="/Auctions/NewSale">Vendre un article</a> <a class="nav-link"
-					href="/Auctions/ProfilModification">Mon profil</a> <a
-					class="nav-link" href="/Auctions/WelcomePageVisitor">Déconnexion</a>
+				<a class="nav-link active" aria-current="page" href="/Auctions/WelcomePageUser">Troc-Enchères</a> 
+				<a class="nav-link"	href="/Auctions/NewSale">Vendre un article</a> 
+				<a class="nav-link"	href="/Auctions/ProfilUser">Mon profil</a>
+					<form method="get" action="ServletDeconnexion">
+					<a class="nav-link" method="get" href="/Auctions/ServletDeconnexion">Déconnexion</a>
+					</form>
 			</nav>
 		</div>
 

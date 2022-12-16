@@ -1,6 +1,5 @@
 package fr.eni.javaee.auctions.dal;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,13 +9,17 @@ import java.sql.Statement;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 
-public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
-
+public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {	
+	private static final String PSEUDO_VERIF = "SELECT pseudo FROM Utilisateurs WHERE pseudo = ?;";
 	private static final String INSERT = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE pseudo = ? and mot_de_passe = ? ;";
+	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE (pseudo = ? or email = ?) and mot_de_passe = ? ;";
 
+
+	
 	@Override
-	public void insert(Utilisateur utilisateur) throws BusinessException {
+	public void insert(Utilisateur utilisateur) throws SQLException, BusinessException {
+		
+		
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 
 			if (utilisateur == null) {
@@ -24,7 +27,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				be.ajouterErreur(CodesErreursUtilisateurDAL.INSERT_OBJECT_NULL);
 				throw be;
 			}
-			PreparedStatement pstmt = cnx.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+			
+			PreparedStatement pstmt = cnx.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);	
+					
 			pstmt.setString(1, utilisateur.getPseudo());
 			pstmt.setString(2, utilisateur.getNom());
 			pstmt.setString(3, utilisateur.getPrenom());
@@ -47,7 +52,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		}
 	}
 
-	public Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException {
+	public Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException, BusinessException {
 		
 		Utilisateur utilisateurCnx = null;
 
@@ -56,10 +61,11 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 			PreparedStatement pstmt = cnx.prepareStatement(SELECT_ID_CONNEXION);
 			ResultSet rs = null;
 			pstmt.setString(1, pseudo);
-			pstmt.setString(2, mdp);
+			pstmt.setString(2, pseudo);
+			pstmt.setString(3, mdp);
 			rs = pstmt.executeQuery();
 
-			if (rs.next()) {
+			while (rs.next()) {
 				utilisateurCnx = new Utilisateur();
 				utilisateurCnx.setNoUtilisateur(rs.getInt("no_utilisateur"));
 				utilisateurCnx.setPseudo(rs.getString("pseudo"));
@@ -72,12 +78,17 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				utilisateurCnx.setVille(rs.getString("ville"));
 				utilisateurCnx.setMotDePasse(rs.getString("mot_de_passe"));
 				utilisateurCnx.setCredit(rs.getInt("credit"));
-			}
+			}			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			BusinessException be = new BusinessException();
+			throw be;
 		}
 		System.out.println(utilisateurCnx);
 		return utilisateurCnx;
 	}
+
+	
 
 }

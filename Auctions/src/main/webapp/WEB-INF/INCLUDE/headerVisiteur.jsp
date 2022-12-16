@@ -32,9 +32,10 @@ header {
 
 	<header>
 		<div class="navbar">
-			<a id="logoAccueil" href="/Auctions/WelcomePageVisitor"><strong>ENI
+			<a id="logoAccueil" href="/Auctions/WelcomePageUser"><strong>ENI
 					- Auctions</strong></a>
 		</div>
+		Bienvenue ${sessionScope.pseudo }
 		<div class="navbar">
 			<nav class="nav">
 				<a class="nav-link active" aria-current="page"

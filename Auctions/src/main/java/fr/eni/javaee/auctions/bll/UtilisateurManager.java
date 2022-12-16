@@ -1,8 +1,6 @@
 package fr.eni.javaee.auctions.bll;
 
 import java.sql.SQLException;
-import java.util.List;
-
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 import fr.eni.javaee.auctions.dal.DAOFactory;
@@ -24,7 +22,7 @@ public class UtilisateurManager {
 
 	public Utilisateur insert(String pseudo, String nom, String prenom, String email, String telephone, String rue,
 			String codePostal, String ville, String motDePasse, int credit, boolean administrateur,
-			String validationMDP) throws BusinessException {
+			String validationMDP) throws SQLException, BusinessException {
 		// 1 Verification des données
 
 		BusinessException be = new BusinessException();
@@ -50,20 +48,30 @@ public class UtilisateurManager {
 		return newUser;
 	}
 
-	public Utilisateur verifUtilisateur (String pseudo, String mdp) throws SQLException, BusinessException {
-		
+	public Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException, BusinessException {
+
 		BusinessException be = new BusinessException();
-		validerPseudo(pseudo, be);
-		validerMotDePasse(mdp, be);
+		validerPseudoCNX(pseudo, be);
+		validerMotDePasseCNX(mdp, be);
 		if (be.hasErreurs()) {
 			throw be;
 		}
-		
 		return DAOFactory.getUtilisateurDAO().verifUtilisateur(pseudo, mdp);
 	}
 	
-	
 	// TO DO: method modifier (update)
+
+	private void validerPseudoCNX(String pseudo, BusinessException be) {
+		if (pseudo == null || pseudo.isBlank() || pseudo.length() > 30) {
+			be.ajouterErreur(CodeErreurBLLUtilisateur.REGLES_UTILISATEUR_CNX_PSEUDO);
+		}
+	}
+
+	private void validerMotDePasseCNX(String motDePasse, BusinessException be) {
+		if (motDePasse == null || motDePasse.isBlank() || motDePasse.length() > 30) {
+			be.ajouterErreur(CodeErreurBLLUtilisateur.REGLES_UTILISATEUR_CNX_MDP);
+		}
+	}
 
 	private void validerPseudo(String pseudo, BusinessException be) {
 		if (pseudo == null || pseudo.isBlank() || pseudo.length() > 30) {
@@ -87,7 +95,6 @@ public class UtilisateurManager {
 		if (email == null || email.isBlank() || email.length() > 20) {
 			be.ajouterErreur(CodeErreurBLLUtilisateur.REGLES_UTILISATEUR_EMAIL_ERREUR);
 		}
-
 	}
 
 	private void validerTelephone(String telephone, BusinessException be) {

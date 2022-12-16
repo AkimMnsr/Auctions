@@ -30,8 +30,11 @@ header {
 <body>
 	<header>
 		<div class="navbar">
-			<a id="logoAccueil" href="/Auctions/WelcomePageVisitor"><strong>ENI
+			<a id="logoAccueil" href="/Auctions/WelcomePageUser"><strong>ENI
 					- Auctions</strong></a>
+		</div>
+		<div>
+		Connecté(e) en tant que ${sessionScope.pseudo }
 		</div>
 
 
