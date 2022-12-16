@@ -14,12 +14,22 @@ public class Categorie implements Serializable {
 	//CONSTRUCTEUR VIDE
 	public Categorie () { }
 		
-	public Categorie(int noCategorie, String libelle) {
+	public Categorie(String libelle) {
 		this();
-		this.noCategorie = noCategorie;
 		this.libelle = libelle;
 	}
+	
+	public Categorie(int noCategorie, String libelle) {
+		this(libelle);
+		this.noCategorie = noCategorie;
+	}
 
+	public Categorie(int noCategorie) {
+		this();
+		this.noCategorie = noCategorie;
+	}
+	
+	
 	//METHODES D'INSTANCE
 	@Override
 	public String toString() {

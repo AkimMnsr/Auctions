@@ -2,6 +2,7 @@ package fr.eni.javaee.auctions.bo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 /**
  * 
  * @author mberger2022
@@ -17,16 +18,31 @@ public class ArticleVendu implements Serializable {
 	private int miseAPrix; 				//NULL
 	private int prixVente; 				//NULL
 	private Categorie categorie;
-	private Utilisateur vendeur;
-	private Utilisateur acquereur;
+	private Utilisateur proprietaire;
 	private Retrait lieuRetrait;
 	
 	//CONSTRUCTEUR VIDE
 	public ArticleVendu () { }
-		
+
+	//Quentin SW
+	public ArticleVendu(String nomArticle, String description, LocalDate dateDebEncheres, LocalDate dateFinEncheres,
+			Integer miseAPrix,Categorie categ, Utilisateur vendeur, Retrait lieuRetrait) {
+		this();
+		this.nomArticle = nomArticle;
+		this.description = description;
+		this.dateDebEncheres = dateDebEncheres;
+		this.dateFinEncheres = dateFinEncheres;
+		this.miseAPrix = miseAPrix;
+		this.categorie = categ;
+		this.proprietaire = vendeur;
+		this.lieuRetrait = lieuRetrait;
+	}
+
+
 	public ArticleVendu(int noArticle, String nomArticle, String description, LocalDate dateDebEncheres,
 			            LocalDate dateFinEncheres, int miseAPrix, Categorie categorie, Utilisateur vendeur) {
-		this();
+		
+		
 		this.noArticle = noArticle;
 		this.nomArticle = nomArticle;
 		this.description = description;
@@ -34,11 +50,14 @@ public class ArticleVendu implements Serializable {
 		this.dateFinEncheres = dateFinEncheres;
 		this.miseAPrix = miseAPrix;
 		this.categorie = categorie;
-		this.vendeur = vendeur;
+		this.proprietaire = vendeur;
+		
 		//initialisation du lieu de retrait avec l'adresse du vendeur
 		this.lieuRetrait = new Retrait(vendeur.getRue(), vendeur.getCodePostal(),
-									   vendeur.getVille(), this);
+									   vendeur.getVille());
 	}
+	
+	
 
 	//METHODES D'INSTANCE
 	@Override
@@ -58,10 +77,8 @@ public class ArticleVendu implements Serializable {
 		builder.append(getMiseAPrix());
 		builder.append(", prixVente=");
 		builder.append(getPrixVente());
-		builder.append(", vendeur=");
-		builder.append(getVendeur());
-		builder.append(", acquereur=");
-		builder.append(getAcquereur());
+		builder.append(", proprietaire=");
+		builder.append(getProprietaire());
 		builder.append(", retrait)=");
 		builder.append(getLieuRetrait());
 		builder.append("]");
@@ -117,17 +134,11 @@ public class ArticleVendu implements Serializable {
 	public void setCategorie(Categorie categorie) {
 		this.categorie = categorie;
 	}
-	public Utilisateur getVendeur() {
-		return vendeur;
+	public Utilisateur getProprietaire() {
+		return proprietaire;
 	}
-	public void setVendeur(Utilisateur vendeur) {
-		this.vendeur = vendeur;
-	}
-	public Utilisateur getAcquereur() {
-		return acquereur;
-	}
-	public void setAcquereur(Utilisateur acquereur) {
-		this.acquereur = acquereur;
+	public void setProprietaire(Utilisateur vendeur) {
+		this.proprietaire = vendeur;
 	}
 	public Retrait getLieuRetrait() {
 		return lieuRetrait;
