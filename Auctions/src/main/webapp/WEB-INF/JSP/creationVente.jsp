@@ -95,7 +95,7 @@
 				<br>
 
 				<div>
-					<label for="CodePostal">CodePostal:</label> <input type="number"
+					<label for="CodePostal">CodePostal:</label> <input  type="number"
 						id="CodePostal" name="CodePostal" required>
 				</div>
 				<br>
