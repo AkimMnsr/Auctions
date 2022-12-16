@@ -50,17 +50,18 @@ public class ArticleVendu implements Serializable {
 		this.proprietaire = proprietaire;
 		//initialisation du lieu de retrait avec l'adresse du vendeur
 		this.lieuRetrait = new Retrait(proprietaire.getRue(), proprietaire.getCodePostal(),
-							proprietaire.getVille(), this);
+							proprietaire.getVille());
 	}
 	
 	public ArticleVendu(int noArticle, String nomArticle, String description, LocalDate dateDebEncheres,
-			            LocalDate dateFinEncheres, int miseAPrix, Categorie categorie, Utilisateur proprietaire) {
-		this(noArticle, nomArticle, dateFinEncheres, 0, proprietaire);
+			            LocalDate dateFinEncheres, int miseAPrix, int prixVente, Categorie categorie, Utilisateur proprietaire) {
+		this(noArticle, nomArticle, dateFinEncheres, prixVente, proprietaire);
 		this.description = description;
 		this.dateDebEncheres = dateDebEncheres;
 		this.miseAPrix = miseAPrix;
 		this.categorie = categorie;
 	}
+	
 	public ArticleVendu(int noArticle, String nomArticle, String description, LocalDate dateDebEncheres,
             LocalDate dateFinEncheres, int miseAPrix, Categorie categorie, Utilisateur vendeur) {
 
