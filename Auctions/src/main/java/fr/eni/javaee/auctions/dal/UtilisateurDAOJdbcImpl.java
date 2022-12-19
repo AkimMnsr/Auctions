@@ -10,7 +10,7 @@ import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 
 public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
-	private static final String MODIFIER = "UPDATE Utilisateurs set pseudo = ?, set nom = ? , set prenom = ?, set email = ?, set telephone = ?, set rue = ?, set code_postal = ?, set ville = ?, set mot_de_passe = ? WHERE pseudo = ? and mot_de_passe = ?;";
+	private static final String MODIFIER = "UPDATE Utilisateurs SET pseudo = ?, nom = ? ,  prenom = ?,  email = ?,  telephone = ?,  rue = ?,  code_postal = ?,  ville = ?,  mot_de_passe = ? WHERE no_utilisateur = ? ;";
 	private static final String INSERT = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE (pseudo = ? or email = ?) and mot_de_passe = ? ;";
 
@@ -88,7 +88,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	}
 
 	@Override
-	public void modifier(Utilisateur utilisateur, String pseudoSession, String mdpSession) throws BusinessException {
+	public void modifier(Utilisateur utilisateur, String mdpSession) throws BusinessException {
 
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 			PreparedStatement pstmt = cnx.prepareStatement(MODIFIER);		
@@ -108,8 +108,8 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				pstmt.setString(9, utilisateur.getMotDePasse());
 				
 			}		
-			pstmt.setString(10, pseudoSession);
-			pstmt.setString(11, mdpSession);
+			pstmt.setInt(10, utilisateur.getNoUtilisateur());
+		
 		
 			pstmt.executeUpdate();
 		} catch (Exception e) {

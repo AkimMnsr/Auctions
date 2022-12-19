@@ -60,7 +60,7 @@ public class UtilisateurManager {
 		return DAOFactory.getUtilisateurDAO().verifUtilisateur(pseudo, mdp);
 	}
 	
-	public void modifier (Utilisateur utilisateur, String pseudoSession, String mdpSession, String ancienMdp, String nouveauMDP, String confirmationMdp) throws BusinessException {
+	public void modifier (Utilisateur utilisateur, String mdpSession, String ancienMdp, String nouveauMDP, String confirmationMdp) throws BusinessException {
 		
 		BusinessException be = new BusinessException();
 		validerPseudo(utilisateur.getPseudo(), be);
@@ -86,7 +86,7 @@ public class UtilisateurManager {
 			e.printStackTrace();
 		}
 		
-		DAOFactory.getUtilisateurDAO().modifier(utilisateur, pseudoSession, mdpSession);
+		DAOFactory.getUtilisateurDAO().modifier(utilisateur, mdpSession);
 		
 	}
 

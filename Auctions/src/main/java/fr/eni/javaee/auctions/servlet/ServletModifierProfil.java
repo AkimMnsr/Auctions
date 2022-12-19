@@ -36,6 +36,7 @@ public class ServletModifierProfil extends HttpServlet {
 		String pseudoSession = userMdp.getPseudo();
 		String mdpSession = userMdp.getMotDePasse();
 		
+		int idSession = userMdp.getNoUtilisateur();
 		String pseudo = request.getParameter("pseudo");
 		String nom = request.getParameter("nom");
 		String prenom = request.getParameter("prenom");
@@ -49,10 +50,10 @@ public class ServletModifierProfil extends HttpServlet {
 		String confirmationMDP = request.getParameter("confirmationMDP");
 		
 		
-		Utilisateur utilisateurModif = new Utilisateur (pseudo, nom, prenom, email, telephone, rue, codePostal, ville, nouveauMdp);
+		Utilisateur utilisateurModif = new Utilisateur (idSession, pseudo, nom, prenom, email, telephone, rue, codePostal, ville, nouveauMdp);
 		System.out.println(utilisateurModif);
 		try {
-		UtilisateurManager.getInstance().modifier(utilisateurModif, pseudoSession, mdpSession, ancienMdp, nouveauMdp, confirmationMDP);
+		UtilisateurManager.getInstance().modifier(utilisateurModif,mdpSession, ancienMdp, nouveauMdp, confirmationMDP);
 		RequestDispatcher rd = request.getRequestDispatcher("/ProfilUser");
 		rd.forward(request, response);
 			
