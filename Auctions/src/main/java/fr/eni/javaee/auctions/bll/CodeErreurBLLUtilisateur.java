@@ -15,5 +15,6 @@ public class CodeErreurBLLUtilisateur {
 	public static final int REGLES_UTILISATEUR_VALIDER_MDP_ERREUR = 20_010;
 	public static final int REGLES_UTILISATEUR_CNX_PSEUDO = 20_011;	
 	public static final int REGLES_UTILISATEUR_CNX_MDP = 20_012;
-
+	public static final int REGLES_UTILISATEUR_UTILISATEUR_INEXISTANT = 20_013;
+	public static final int REGLES_UTILISATEURS_MOT_DE_PASSE_INCORRECT = 20_014;
 }

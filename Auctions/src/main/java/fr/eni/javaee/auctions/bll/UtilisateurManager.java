@@ -60,32 +60,33 @@ public class UtilisateurManager {
 		return DAOFactory.getUtilisateurDAO().verifUtilisateur(pseudo, mdp);
 	}
 	
-	public void modifier (Utilisateur utilisateur, String pseudo, String motDePasse, String nouveauMDP, String confirmationMdp) {
-		try {
-			Utilisateur verif = verifUtilisateur(pseudo,motDePasse );
-			if(utilisateur.equals(verif)){
-				BusinessException be = new BusinessException();
-				validerPseudo(utilisateur.getPseudo(), be);
-				validerNom(utilisateur.getNom(), be);
-				validerPrenom(utilisateur.getPrenom(), be);
-				validerEmail(utilisateur.getEmail(), be);
-				validerTelephone(utilisateur.getTelephone(), be);
-				validerRue(utilisateur.getRue(), be);
-				validerCodePostal(utilisateur.getCodePostal(), be);
-				validerVille(utilisateur.getVille(), be);
-				validerMotDePasse(utilisateur.getMotDePasse(), be);
-				validerMDPCorrect(nouveauMDP, confirmationMdp, be);
-				if (be.hasErreurs()) {
-					throw be;
-				}
+	public void modifier (Utilisateur utilisateur, String pseudoSession, String mdpSession, String ancienMdp, String nouveauMDP, String confirmationMdp) throws BusinessException {
+		
+		BusinessException be = new BusinessException();
+		validerPseudo(utilisateur.getPseudo(), be);
+		validerNom(utilisateur.getNom(), be);
+		validerPrenom(utilisateur.getPrenom(), be);
+		validerEmail(utilisateur.getEmail(), be);
+		validerTelephone(utilisateur.getTelephone(), be);
+		validerRue(utilisateur.getRue(), be);
+		validerCodePostal(utilisateur.getCodePostal(), be);
+		validerVille(utilisateur.getVille(), be);		
+		try {			
+		if (nouveauMDP != null && confirmationMdp != null) {
+		validerMDPCorrect(nouveauMDP, confirmationMdp, be);
+			if (!mdpSession.equals(ancienMdp)) {
+				be.ajouterErreur(CodeErreurBLLUtilisateur.REGLES_UTILISATEURS_MOT_DE_PASSE_INCORRECT);
 			}
-		} catch (SQLException e) {			
-			e.printStackTrace();
+		}
+		
+			if (be.hasErreurs()) {
+				throw be;
+			}
 		} catch (BusinessException e) {			
 			e.printStackTrace();
 		}
 		
-		DAOFactory.getUtilisateurDAO().modifier(utilisateur);
+		DAOFactory.getUtilisateurDAO().modifier(utilisateur, pseudoSession, mdpSession);
 		
 	}
 

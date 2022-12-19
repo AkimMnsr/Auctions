@@ -9,20 +9,14 @@ import java.sql.Statement;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 
-public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {	
-	private static final String PSEUDO_VERIF = "SELECT pseudo FROM Utilisateurs WHERE pseudo = ?;";
+public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
+	private static final String MODIFIER = "UPDATE Utilisateurs set pseudo = ?, set nom = ? , set prenom = ?, set email = ?, set telephone = ?, set rue = ?, set code_postal = ?, set ville = ?, set mot_de_passe = ? WHERE pseudo = ? and mot_de_passe = ?;";
 	private static final String INSERT = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE (pseudo = ? or email = ?) and mot_de_passe = ? ;";
 
-
-	
-	
-	
-	
 	@Override
 	public void insert(Utilisateur utilisateur) throws SQLException, BusinessException {
-		
-		
+
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 
 			if (utilisateur == null) {
@@ -30,9 +24,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				be.ajouterErreur(CodesErreursUtilisateurDAL.INSERT_OBJECT_NULL);
 				throw be;
 			}
-			
-			PreparedStatement pstmt = cnx.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);	
-					
+
+			PreparedStatement pstmt = cnx.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+
 			pstmt.setString(1, utilisateur.getPseudo());
 			pstmt.setString(2, utilisateur.getNom());
 			pstmt.setString(3, utilisateur.getPrenom());
@@ -56,7 +50,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	}
 
 	public Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException, BusinessException {
-		
+
 		Utilisateur utilisateurCnx = null;
 
 		try (Connection cnx = ConnectionProvider.getConnection()) {
@@ -81,8 +75,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				utilisateurCnx.setVille(rs.getString("ville"));
 				utilisateurCnx.setMotDePasse(rs.getString("mot_de_passe"));
 				utilisateurCnx.setCredit(rs.getInt("credit"));
-			}			
-			
+
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			BusinessException be = new BusinessException();
@@ -93,11 +88,35 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	}
 
 	@Override
-	public void modifier(Utilisateur utilisateur) {
-		
-		
-	}
+	public void modifier(Utilisateur utilisateur, String pseudoSession, String mdpSession) throws BusinessException {
 
-	
+		try (Connection cnx = ConnectionProvider.getConnection()) {
+			PreparedStatement pstmt = cnx.prepareStatement(MODIFIER);		
+			
+		
+			pstmt.setString(1, utilisateur.getPseudo());
+			pstmt.setString(2, utilisateur.getNom());
+			pstmt.setString(3, utilisateur.getPrenom());
+			pstmt.setString(4, utilisateur.getEmail());
+			pstmt.setString(5, utilisateur.getTelephone());
+			pstmt.setString(6, utilisateur.getRue());
+			pstmt.setString(7, utilisateur.getCodePostal());
+			pstmt.setString(8, utilisateur.getVille());			
+			if (utilisateur.getMotDePasse().equals("") || utilisateur.getMotDePasse().isBlank() || utilisateur.getMotDePasse() == null) {
+				pstmt.setString(9, mdpSession);
+			} else {
+				pstmt.setString(9, utilisateur.getMotDePasse());
+				
+			}		
+			pstmt.setString(10, pseudoSession);
+			pstmt.setString(11, mdpSession);
+		
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			BusinessException be = new BusinessException();
+			throw be;
+		}
+	}
 
 }
