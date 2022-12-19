@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@page import="java.util.List"%>
+<%@page import="fr.eni.javaee.auctions.messages.lecteurMessages"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +20,25 @@
 	<%--Include de la balise Header--%>
 	<%@include file="/WEB-INF/INCLUDE/header.jsp"%>
 	
+	<div id="listeErreur">
+		<%
+		List<Integer> listeCodesErreur = (List<Integer>) request.getAttribute("listeCodeErreur");
+		if (listeCodesErreur != null) {
+		%>
+		<p style="color: red">Erreur, modification impossible
+			imposssible:</p>
+		<%
+		for (int code : listeCodesErreur) {
+		%>
+		<p>
+			-
+			<%=lecteurMessages.getMessageErreur(code)%></p>
+		<%
+		}
+		}
+		%>
+	</div>
+	
 	<div id="generalDiv">
 		<form method="post" action="${pageContext.request.contextPath }/ProfilModification"> 
 			<input name="pseudo" type="text" placeholder="Votre pseudo" value="${sessionScope.utilisateur.pseudo }"> 
@@ -30,7 +51,7 @@
 			<input name="ville" type="text" placeholder="Ville"  value="${sessionScope.utilisateur.ville }"> 
 			<input name="mdp" type="password" placeholder="Ancien mot de passe"> 			
 			<input name="nouveauMdp" type="password" placeholder="nouveau mot de passe" >
-			<input name="confirmationMDP" type="paswword" placeholder="confirmer le nouveau mot de passe">
+			<input name="confirmationMDP" type="password" placeholder="confirmer le nouveau mot de passe">
 			<button type="submit">Enregistrer</button> 
 		</form> 
 
