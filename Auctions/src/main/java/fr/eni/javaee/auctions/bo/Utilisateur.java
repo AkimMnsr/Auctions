@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.eni.javaee.auctions.bll.UtilisateurManager;
+
 /**
  * 
  * @author mberger2022
@@ -31,13 +33,20 @@ public class Utilisateur implements Serializable {
 	}
 
 	/**
-	 * @author mberger2022
-	 */
-	public Utilisateur(int noUtilisateur, String pseudo) {
-		this();
-		this.noUtilisateur = noUtilisateur;
-		this.pseudo = pseudo;
-	}
+    * @author mberger2022
+    */
+   public Utilisateur(int noUtilisateur) {
+       this();
+       this.noUtilisateur = noUtilisateur;
+   }
+   /**
+    * @author mberger2022
+    */
+   public Utilisateur(int noUtilisateur, String pseudo) {
+       this(noUtilisateur);
+       this.pseudo = pseudo;
+   }
+
 
 	public Utilisateur(String pseudo, String nom, String prenom, String email, String telephone, String rue,
 			String codePostal, String ville, String motDePasse, int credit, boolean administrateur) {
