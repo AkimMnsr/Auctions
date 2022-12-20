@@ -55,7 +55,7 @@
 			<button type="submit">Enregistrer</button> 
 		</form> 
 
-		<form method="get" action="${pageContext.request.contextPath }/WelcomePageUser">
+		<form method="get" action="${pageContext.request.contextPath }/ServletSuppressionUtilisateur">
 			<input type="submit" value="Supression du compte">
 		</form>
 	</div>

@@ -8,11 +8,6 @@
 <meta charset="UTF-8">
 <link rel="icon" href="logo/ENILogo.png" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-	crossorigin="anonymous">
 <title>ENI-Enchères : connection</title>
 <style type="text/css">
 #formuDiv {
@@ -59,7 +54,7 @@
 		<input type="checkbox">Se souvenir de moi <input type="submit"
 			id="boutonSubmit" type="submit" value="Connexion">
 	</form>
-
+	<a href="">mot de passe oublié ? </a>
 	<form action="/Auctions/ProfilCreation">
 		<input type="submit" value="Créer un compte">
 	</form>
