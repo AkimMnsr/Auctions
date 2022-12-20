@@ -48,7 +48,15 @@ public class UtilisateurManager {
 
 		return newUser;
 	}
-
+	
+	public boolean uniciteIdentifiant (String pseudo, String email) {
+			
+		
+		return DAOFactory.getUtilisateurDAO().uniciteIdentifiant(pseudo, email);
+		
+	}
+	
+	
 	public Utilisateur verifUtilisateur(String pseudo, String mdp) throws SQLException, BusinessException {
 
 		BusinessException be = new BusinessException();

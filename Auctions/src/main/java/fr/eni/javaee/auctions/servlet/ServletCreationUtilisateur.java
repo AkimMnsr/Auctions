@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bll.UtilisateurManager;
 import fr.eni.javaee.auctions.bo.Utilisateur;
+import fr.eni.javaee.auctions.servlet.gestion_erreur.CodeErreurUtilisateur;
 
 @WebServlet("/ProfilCreation")
 public class ServletCreationUtilisateur extends HttpServlet {
@@ -41,26 +42,31 @@ public class ServletCreationUtilisateur extends HttpServlet {
 		int credit = 0;
 		boolean administrateur = false;
 		String validationMDP = request.getParameter("mdpConfirmation");
-		
-		
+		boolean verif;
 
-		try {		
-			Utilisateur utilisateur = UtilisateurManager.getInstance().insert(pseudo, nom, prenom, email, telephone, rue,
-					codePostal, ville, motDePasse, credit, administrateur, validationMDP);
-			System.out.println(utilisateur);		
+		try {
+			verif = UtilisateurManager.getInstance().uniciteIdentifiant(pseudo, email);
+			if (verif == false) {
+				BusinessException be = new BusinessException();
+				be.ajouterErreur(CodeErreurUtilisateur.UTILISATEUR_DEJA_EXISTANT);
+				throw be;
+			}
+
+			Utilisateur utilisateur = UtilisateurManager.getInstance().insert(pseudo, nom, prenom, email, telephone,
+					rue, codePostal, ville, motDePasse, credit, administrateur, validationMDP);
+
 			if (utilisateur != null) {
-			 	HttpSession session = request.getSession(true);			
-				session.setAttribute("utilisateur", utilisateur);	
-				RequestDispatcher rd = request.getRequestDispatcher("/WelcomePageUser");
-				rd.forward(request, response);
-			} 
+				HttpSession session = request.getSession(true);
+				session.setAttribute("utilisateur", utilisateur);
+				response.sendRedirect(request.getContextPath()+ "/WelcomePageUser");
+			}
 		} catch (SQLException | BusinessException e) {
 			e.printStackTrace();
 			request.setAttribute("listeCodeErreur", ((BusinessException) e).getListeCodesErreur());
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/creationUtilisateur.jsp");
+			rd.forward(request, response);
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/creationUtilisateur.jsp");
-		rd.forward(request, response);
-	
+
 	}
 
 }

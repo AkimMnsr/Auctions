@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bll.UtilisateurManager;
 import fr.eni.javaee.auctions.bo.Utilisateur;
+import fr.eni.javaee.auctions.servlet.gestion_erreur.CodeErreurUtilisateur;
 
 
 
@@ -42,9 +43,12 @@ public class ServletLoginUtilisateur extends HttpServlet {
 			if (utilisateur != null) {
 				HttpSession session = request.getSession(true);			
 				session.setAttribute("utilisateur", utilisateur);
-				RequestDispatcher rd = request.getRequestDispatcher("/WelcomePageUser");
-				rd.forward(request, response);
-			} 
+				response.sendRedirect(request.getContextPath()+ "/WelcomePageUser"); //a voir et gérer 
+			} else {
+				BusinessException be = new BusinessException();
+				be.ajouterErreur(CodeErreurUtilisateur.UTILISATEUR_INCONNU);
+				throw be;
+			}
 		} catch (SQLException | BusinessException e) {			
 			e.printStackTrace();
 			request.setAttribute("listeCodeErreur", ((BusinessException) e).getListeCodesErreur());

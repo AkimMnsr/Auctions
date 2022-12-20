@@ -13,6 +13,37 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	private static final String MODIFIER = "UPDATE Utilisateurs SET pseudo = ?, nom = ? ,  prenom = ?,  email = ?,  telephone = ?,  rue = ?,  code_postal = ?,  ville = ?,  mot_de_passe = ? WHERE no_utilisateur = ? ;";
 	private static final String INSERT = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE (pseudo = ? or email = ?) and mot_de_passe = ? ;";
+	private static final String SELECT_PSEUDO_EMAIL = "SELECT pseudo, email FROM Utilisateurs WHERE pseudo = ? and email = ? ;";
+
+	public boolean uniciteIdentifiant(String pseudo, String email) {
+		Utilisateur userVerif = null;
+		boolean verif = false;
+
+		try (Connection cnx = ConnectionProvider.getConnection()) {
+			PreparedStatement pstmt = cnx.prepareStatement(SELECT_PSEUDO_EMAIL);
+			ResultSet rs = null;
+			pstmt.setString(1, pseudo);
+			pstmt.setString(2, email);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				userVerif = new Utilisateur();
+				userVerif.setPseudo(rs.getString("pseudo"));
+				userVerif.setEmail(rs.getString("email"));
+			}
+			System.out.println(userVerif);
+			if (userVerif == null) {
+				verif = true;
+			} else {
+				verif = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return verif;
+
+	}
 
 	@Override
 	public void insert(Utilisateur utilisateur) throws SQLException, BusinessException {
@@ -91,9 +122,8 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	public void modifier(Utilisateur utilisateur, String mdpSession) throws BusinessException {
 
 		try (Connection cnx = ConnectionProvider.getConnection()) {
-			PreparedStatement pstmt = cnx.prepareStatement(MODIFIER);		
-			
-		
+			PreparedStatement pstmt = cnx.prepareStatement(MODIFIER);
+
 			pstmt.setString(1, utilisateur.getPseudo());
 			pstmt.setString(2, utilisateur.getNom());
 			pstmt.setString(3, utilisateur.getPrenom());
@@ -101,16 +131,16 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 			pstmt.setString(5, utilisateur.getTelephone());
 			pstmt.setString(6, utilisateur.getRue());
 			pstmt.setString(7, utilisateur.getCodePostal());
-			pstmt.setString(8, utilisateur.getVille());			
-			if (utilisateur.getMotDePasse().equals("") || utilisateur.getMotDePasse().isBlank() || utilisateur.getMotDePasse() == null) {
+			pstmt.setString(8, utilisateur.getVille());
+			if (utilisateur.getMotDePasse().equals("") || utilisateur.getMotDePasse().isBlank()
+					|| utilisateur.getMotDePasse() == null) {
 				pstmt.setString(9, mdpSession);
 			} else {
 				pstmt.setString(9, utilisateur.getMotDePasse());
-				
-			}		
+
+			}
 			pstmt.setInt(10, utilisateur.getNoUtilisateur());
-		
-		
+
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
