@@ -37,11 +37,13 @@ h1 {
 		<li><strong>Ville :</strong> ${ville }</li>
 	</ul>
 
+<!--  	
 	<form method="get"
 		action="${pageContext.request.contextPath }/WelcomePageUser">
 		<input type="submit" value="retour">
 	</form>
-
+ -->
+    <button type="submit" onClick="return history.back();" >Retour</button>
 
 
 </body>
