@@ -17,6 +17,7 @@ public class ArticleVendu implements Serializable {
 	private LocalDate dateFinEncheres; 	//NOT NULL
 	private int miseAPrix; 				//NULL
 	private int prixVente; 				//NULL
+	private int etatVente;				
 	private Categorie categorie;
 	private Utilisateur proprietaire;   // vendeur tant que enchère en cours, acquereur une fois l'enchère terminée
 	private Retrait lieuRetrait;
@@ -26,7 +27,7 @@ public class ArticleVendu implements Serializable {
 		
 	//Quentin SW
 	public ArticleVendu(String nomArticle, String description, LocalDate dateDebEncheres, LocalDate dateFinEncheres,
-			Integer miseAPrix,Categorie categ, Utilisateur vendeur, Retrait lieuRetrait) {
+			Integer miseAPrix, Categorie categ, Utilisateur vendeur, Retrait lieuRetrait) {
 		this();
 		this.nomArticle = nomArticle;
 		this.description = description;
@@ -41,12 +42,13 @@ public class ArticleVendu implements Serializable {
 	/**
 	 * @author mberger2022
 	 */
-	public ArticleVendu(int noArticle, String nomArticle, LocalDate dateFinEncheres, int prixVente, Utilisateur proprietaire) {
+	public ArticleVendu(int noArticle, String nomArticle, LocalDate dateDebEncheres, LocalDate dateFinEncheres, int prixVente, Utilisateur proprietaire) {
 		this();
 		this.noArticle = noArticle;
 		this.nomArticle = nomArticle;
+		this.dateDebEncheres = dateDebEncheres;
 		this.dateFinEncheres = dateFinEncheres;
-		this.prixVente = prixVente;
+		this.prixVente = prixVente; 
 		this.proprietaire = proprietaire;
 		//initialisation du lieu de retrait avec l'adresse du vendeur
 		this.lieuRetrait = new Retrait(proprietaire.getRue(), proprietaire.getCodePostal(),
@@ -55,7 +57,7 @@ public class ArticleVendu implements Serializable {
 	
 	public ArticleVendu(int noArticle, String nomArticle, String description, LocalDate dateDebEncheres,
 			            LocalDate dateFinEncheres, int miseAPrix, int prixVente, Categorie categorie, Utilisateur proprietaire) {
-		this(noArticle, nomArticle, dateFinEncheres, prixVente, proprietaire);
+		this(noArticle, nomArticle, dateDebEncheres, dateFinEncheres, prixVente, proprietaire);
 		this.description = description;
 		this.dateDebEncheres = dateDebEncheres;
 		this.miseAPrix = miseAPrix;
@@ -98,6 +100,8 @@ public class ArticleVendu implements Serializable {
 		builder.append(getMiseAPrix());
 		builder.append(", prixVente=");
 		builder.append(getPrixVente());
+		builder.append(", étatVente=");
+		builder.append(getEtatVente());
 		builder.append(", proprietaire=");
 		builder.append(getProprietaire());
 		builder.append(", retrait)=");
@@ -148,6 +152,12 @@ public class ArticleVendu implements Serializable {
 	}
 	public void setPrixVente(int prixVente) {
 		this.prixVente = prixVente;
+	}
+	public int getEtatVente() {
+		return etatVente;
+	}
+	public void setEtatVente(int etatVente) {
+		this.etatVente = etatVente;
 	}
 	public Categorie getCategorie() {
 		return categorie;

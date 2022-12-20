@@ -19,6 +19,9 @@ body {
 }
 
 </style>
+<script>
+
+</script>
 </head>
 <body>
 	<%--Include de la balise Header--%>
@@ -79,8 +82,9 @@ body {
 				<label for="achats">Achats</label>
 				<div>
 					<c:choose>
-					<c:when test="${empty requestScope.achatsVentes || (! empty requestScope.encheresOuvertes && requestScope.encheresOuvertes == true) }">
+					<c:when test="${empty requestScope.achatsVentes || (!empty requestScope.encheresOuvertes && requestScope.encheresOuvertes == true) }">
 						<input type="checkbox" name ="encheresOuvertes" id="encheresOuvertes" value="encheresOuvertes" checked>
+						
 					</c:when>
 					<c:otherwise>
 						<input type="checkbox" name ="encheresOuvertes" id="encheresOuvertes" value="encheresOuvertes">
@@ -107,17 +111,50 @@ body {
 							<label for="mesEncheresGagnees">mes enchères remportées</label>	
 				</div>	
 		</div>	
-		<div>
-			<input type="radio" name ="achats_ventes" id="ventes" value="ventes">
-				
-				
+		<div>							
+			<c:choose>
+		    <c:when test="${!empty requestScope.achatsVentes && requestScope.achatsVentes == 'ventes' }">
+				<input type="radio" name ="achatsVentes" id="ventes" value="ventes" checked>
+			</c:when>
+			<c:otherwise>
+				<input type="radio" name ="achatsVentes" id="ventes" value="ventes">
+			</c:otherwise>    
+			</c:choose>    								
 				<label for="ventes">Mes Ventes</label>
 				<div>
-					<input type="checkbox" name ="ventesEnCours" id="ventesEnCours" value="ventesEnCours">
+					<c:choose>
+					<c:when test="${!empty requestScope.achatsVentes
+					                && (requestScope.achatsVentes == 'ventes' && requestScope.mesVentesEnCours == true
+					                    || (requestScope.mesVentesEnCours == false && requestScope.mesVentesNonDebutees == false 
+					                        &&requestScope.mesVentesTerminees == false ) ) }">
+						<input type="checkbox" name ="mesVentesEnCours" id="ventesEnCours" value="mesVentesEnCours" checked>
+					</c:when>
+					<c:otherwise>
+						<input type="checkbox" name ="mesVentesEnCours" id="ventesEnCours" value="mesVentesEnCours">
+					</c:otherwise>
+					</c:choose>								
 						<label for="ventesEnCours">ventes en cours</label>
-					<input type="checkbox" name ="ventesFutures" id="ventesFutures" value="ventesFutures">
-						<label for="ventesFutures">ventes non débutées</label>					
-					<input type="checkbox" name ="ventesTerminees" id="ventesTerminees" value="ventesTerminees">
+												
+					<c:choose>
+					<c:when test="${!empty requestScope.achatsVentes 
+					                && requestScope.achatsVentes == 'ventes' && requestScope.mesVentesNonDebutees == true }">
+						<input type="checkbox" name ="mesVentesNonDebutees" id="ventesNonDebutees" value="mesVentesNonDebutees" checked>
+					</c:when>
+					<c:otherwise>
+						<input type="checkbox" name ="mesVentesNonDebutees" id="ventesNonDebutees" value="mesVentesNonDebutees">
+					</c:otherwise>
+					</c:choose>	
+						<label for="ventesNonDebutees">ventes non débutées</label>
+																
+					<c:choose>
+					<c:when test="${!empty requestScope.achatsVentes 
+					              && requestScope.achatsVentes == 'ventes' && requestScope.mesVentesTerminees == true }">
+						<input type="checkbox" name ="mesVentesTerminees" id="ventesTerminees" value="mesVentesTerminees" checked>
+					</c:when>
+					<c:otherwise>
+						<input type="checkbox" name ="mesVentesTerminees" id="ventesTerminees" value="mesVentesTerminees">
+					</c:otherwise>
+					</c:choose>	
 						<label for="ventesTerminees">ventes terminées</label>	
 				</div>	
 		</div>
@@ -129,15 +166,46 @@ body {
 	
 	<c:forEach var="e" items="${requestScope.encheres }">
 		<div>
-			<strong>${e.nomArticle }</strong>
+			<c:choose>
+			<c:when test="${!empty requestScope.achatsVentes && requestScope.achatsVentes == 'ventes'
+							&& !empty sessionScope.utilisateur 
+							&& sessionScope.utilisateur.noUtilisateur == e.proprietaire.noUtilisateur
+							&& e.etatVente == 0 }">
+				<a href="${pageContext.request.contextPath }/NewSale?idArticle=${e.noArticle } ">
+						<strong>${e.nomArticle }</strong></a>
+
+			</c:when>
+			<c:when test="${ ((!empty requestScope.achatsVentes && requestScope.achatsVentes == 'achats')
+								|| empty requestScope.achatsVentes)
+			                && !empty sessionScope.utilisateur 
+			                && sessionScope.utilisateur.noUtilisateur != e.proprietaire.noUtilisateur
+			                && e.etatVente == 1 }">
+				<a href="${pageContext.request.contextPath }/Outbid?idArticle=${e.noArticle } ">
+						<strong>${e.nomArticle }</strong></a>
+
+			</c:when>
+						
+			<c:otherwise>
+				<strong>${e.nomArticle }</strong>
+			</c:otherwise>
+			</c:choose>
 			<br>
 			Prix : ${e.prixVente } points
 			<br>
+			<em>( Début de l'enchère : ${e.dateDebEncheres } // Etat: ${e.etatVente } )</em>
+			<br>
 			Fin de l'enchère : ${e.dateFinEncheres }
 			<br>
-			Vendeur : <a href="${pageContext.request.contextPath }/ProfilOtherUser?idUser=${e.proprietaire.noUtilisateur }">
-						${e.proprietaire.pseudo }</a>
-			
+			Vendeur : 
+			<c:choose>
+			<c:when test="${!empty sessionScope.utilisateur }">
+				<a href="${pageContext.request.contextPath }/ProfilOtherUser?idUser=${e.proprietaire.noUtilisateur }">
+							${e.proprietaire.pseudo }</a>
+			</c:when>
+			<c:otherwise>
+				${e.proprietaire.pseudo }
+			</c:otherwise>
+			</c:choose>
 		</div>	
 	</c:forEach>
 	
