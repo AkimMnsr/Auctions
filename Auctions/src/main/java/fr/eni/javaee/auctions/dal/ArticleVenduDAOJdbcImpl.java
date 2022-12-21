@@ -33,7 +33,7 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			+ " WHERE date_debut_encheres <= GETDATE()"
 			+ " AND date_fin_encheres >= GETDATE()";		
 	
-	private static final String SELECT_ENCHERES_EN_COURS = 
+	private static final String SELECT_ACHATS_EN_COURS = 
 			"SELECT e.no_article as no_art, nom_article, prix_vente, date_debut_encheres, date_fin_encheres, a.no_utilisateur as no_user, pseudo"
 			+ " FROM Encheres e"
 			+ " INNER JOIN Articles_vendus a ON e.no_article = a.no_article"
@@ -42,7 +42,7 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			+ " AND date_fin_encheres >= GETDATE()"
 			+ " AND e.no_utilisateur = ?";
 	
-	private static final String SELECT_ENCHERES_GAGNEES = 
+	private static final String SELECT_ACHATS_GAGNES = 
 			"SELECT e.no_article as no_art, nom_article, prix_vente, date_debut_encheres, date_fin_encheres, a.no_utilisateur as no_user, pseudo"
 			+ " FROM Encheres e"
 			+ " INNER JOIN Articles_vendus a ON e.no_article = a.no_article"
@@ -50,27 +50,20 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			+ " WHERE date_fin_encheres < GETDATE()"
 			+ " AND e.no_utilisateur = ?";
 
-	private static final String SELECT_ENCHERE_BY_ID = 
+	private static final String SELECT_BY_ID = 
 			"SELECT nom_article, description, libelle, prix_vente, prix_initial, date_debut_encheres, date_fin_encheres,"
 			+ " r.rue as rue, r.code_postal as cp, r.ville as ville, a.no_utilisateur as no_user, pseudo"
 			+ " FROM Articles_vendus a"
 			+ " INNER JOIN Utilisateurs u ON a.no_utilisateur = u.no_utilisateur"
 			+ " INNER JOIN Categories c ON a.no_categorie = c.no_categorie"
 			+ " INNER JOIN Retraits r on a.no_article = r.no_article"
-			+ " WHERE a.no_article = ?;";
-	
-	private static final String SELECT_MEILLEURE_ENCHERE_BY_ID =
-			"SELECT e.no_utilisateur as no_user, pseudo"
-			+ " FROM Encheres e"
-			+ " INNER JOIN Utilisateurs u ON e.no_utilisateur = u.no_utilisateur"
-			+ " WHERE no_article = ?"
-			+ "   AND montant_enchere = ?;";
+			+ " WHERE a.no_article = ?;";	
 													
 	/**
 	 * @author mberger2022
 	 */
 	@Override
-	public List<ArticleVendu> selectArticlesAll(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsAll(int idUser, String filtreArticle, int filtreCategorie) {
 		List<ArticleVendu> articles = new ArrayList<ArticleVendu>();
 		
 		//1.connexion
@@ -145,13 +138,13 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 	 * @author mberger2022
 	 */
 	@Override
-	public List<ArticleVendu> selectEncheresEnCours(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsEnCours(int idUser, String filtreArticle, int filtreCategorie) {
 		List<ArticleVendu> encheres = new ArrayList<ArticleVendu>();
 		
 		//1.connexion
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 			//2. requête
-			String requeteAvecFiltre = ajouterFiltres(SELECT_ENCHERES_EN_COURS, filtreArticle, filtreCategorie);
+			String requeteAvecFiltre = ajouterFiltres(SELECT_ACHATS_EN_COURS, filtreArticle, filtreCategorie);
 						
 			PreparedStatement pstmt = cnx.prepareStatement(requeteAvecFiltre);
 			
@@ -196,13 +189,13 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 	/**
 	 * @author mberger2022
 	 */
-	public List<ArticleVendu> selectEncheresGagnees(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsGagnes(int idUser, String filtreArticle, int filtreCategorie) {
 		List<ArticleVendu> encheres = new ArrayList<ArticleVendu>();
 		
 		//1.connexion
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 			//2. requête
-			String requeteAvecFiltre = ajouterFiltres(SELECT_ENCHERES_GAGNEES,filtreArticle, filtreCategorie);
+			String requeteAvecFiltre = ajouterFiltres(SELECT_ACHATS_GAGNES,filtreArticle, filtreCategorie);
 						
 			PreparedStatement pstmt = cnx.prepareStatement(requeteAvecFiltre);
 			
@@ -347,12 +340,12 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 	 * @return objet de type ArticleVendu correspondant au numéro passé en paramètre
 	 */	
 	@Override
-	public ArticleVendu selectEnchereById(int idArticle) {
-		ArticleVendu enchere = null;
+	public ArticleVendu selectById(int idArticle) {
+		ArticleVendu article = null;
 		//1.connexion
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 			//2. requête
-			PreparedStatement pstmt = cnx.prepareStatement(SELECT_ENCHERE_BY_ID);
+			PreparedStatement pstmt = cnx.prepareStatement(SELECT_BY_ID);
 			
 			pstmt.setInt(1, idArticle);
 											
@@ -378,53 +371,17 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 				Utilisateur vendeur = new Utilisateur(noUser, pseudo);
 				Categorie categorie = new Categorie(categLibelle);
 				Retrait retrait = new Retrait(rue, codePostal, ville);
-				enchere = new ArticleVendu(nomArt, description, dateDeb, dateFin, prixInitial, categorie, vendeur, retrait);
-				enchere.setNoArticle(idArticle);
-				enchere.setPrixVente(prixVente);						
+				article = new ArticleVendu(nomArt, description, dateDeb, dateFin, prixInitial, categorie, vendeur, retrait);
+				article.setNoArticle(idArticle);
+				article.setPrixVente(prixVente);						
 			}
 		} catch (SQLException e) {
 			//erreur connexion base
 			e.printStackTrace();
 		}		
-		return enchere;
+		return article;
 	}
 	
-	/**
-	 * @author mberger2022
-	 * @param idArticle : numéro de l'article recherché
-	 * @return objet de type Utilisateur correspondant à la meilleure enchère 
-	 *         pour l'article dont le numéro passé en paramètre
-	 */
-	@Override
-	public Utilisateur selectMeilleureEnchereById(int idArticle, int montantMax) {
-		Utilisateur gagnant = null;	
-		
-		//1.connexion
-		try (Connection cnx = ConnectionProvider.getConnection()) {
-			//2. requête
-			PreparedStatement pstmt = cnx.prepareStatement(SELECT_MEILLEURE_ENCHERE_BY_ID);
-			
-			pstmt.setInt(1, idArticle);
-			pstmt.setInt(2, montantMax);
-											
-			//3. résultat
-			ResultSet rs = pstmt.executeQuery();
-			
-			//4. parcours du résultat 
-			// (obligation de faire un next() pour se positionner sur l'enregistrement)
-			if (rs.next()) {
-				int noUser = rs.getInt("no_user");
-				String pseudo = rs.getString("pseudo");
-				
-				gagnant = new Utilisateur(noUser, pseudo);
-			}
-		} catch (SQLException e) {
-			//erreur connexion base
-			e.printStackTrace();
-		}		
-		return gagnant;
-	}
-
 	
 	/**
 	 * @author qswiderski2022

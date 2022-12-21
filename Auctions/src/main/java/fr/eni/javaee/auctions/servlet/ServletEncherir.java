@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bll.ArticleVenduManager;
+import fr.eni.javaee.auctions.bll.EnchereManager;
 import fr.eni.javaee.auctions.bo.ArticleVendu;
+import fr.eni.javaee.auctions.bo.Enchere;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 
 
@@ -22,16 +25,24 @@ public class ServletEncherir extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session = request.getSession();
-		Utilisateur user = (Utilisateur)session.getAttribute("utilisateur");
+		HttpSession session = request.getSession(false);
+		Utilisateur user = null;
+		if (session != null) {
+			user = (Utilisateur)session.getAttribute("utilisateur");
+		}
 		
 		int idArticle = Integer.parseInt(request.getParameter("idArticle"));
 		//System.out.println("[MB]Encherir-GET : idArticle = " + idArticle);
 				
-		ArticleVendu enchere = ArticleVenduManager.getInstance().selectEnchereById(idArticle);
-		Utilisateur gagnantVente = ArticleVenduManager.getInstance().selectMeilleureEnchereById(idArticle, enchere.getPrixVente());
-		request.setAttribute("gagnantVente", gagnantVente);
-		request.setAttribute("enchere", enchere);
+		ArticleVendu article = ArticleVenduManager.getInstance().selectById(idArticle);
+		Enchere meilleureEnchere = null;
+		try {
+			meilleureEnchere = EnchereManager.getInstance().selectMeilleureEnchere(idArticle, article.getPrixVente());
+		} catch (BusinessException be) {
+			System.out.println("[MB]Encherir-GET : listeErreurs = " + be.getListeCodesErreur());
+			request.setAttribute("erreurs", be.getListeCodesErreur());
+		}
+		request.setAttribute("enchere", meilleureEnchere);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/encherir.jsp");
 		rd.forward(request, response);
@@ -39,8 +50,39 @@ public class ServletEncherir extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		int idArticle = 0;
+		if (request.getParameter("idArticle") != null) {
+		    idArticle = Integer.parseInt(request.getParameter("idArticle"));
+			//System.out.println("[MB]Encherir-POST : idArticle = " + idArticle);
+		}
+		int proposition = 0;
+		if (request.getParameter("proposition") != null) {
+			proposition = Integer.parseInt(request.getParameter("proposition"));
+			//System.out.println("[MB]Encherir-POST : proposition = " + proposition);
+		}
+		int idAcheteurPrec = 0;
+		if (request.getParameter("idAcheteurPrec") != null) {
+			idAcheteurPrec = Integer.parseInt(request.getParameter("idAcheteurPrec"));
+			//System.out.println("[MB]Encherir-POST : idAcheteurPrec = " + idAcheteurPrec);
+		}
+		
+		HttpSession session = request.getSession(false);
+		Utilisateur user = null;
+		if (session != null) {
+			user = (Utilisateur)session.getAttribute("utilisateur");
+		}
+		
+		try {
+			EnchereManager.getInstance().insertNouvelleEnchere(user.getNoUtilisateur(), idArticle, proposition, idAcheteurPrec);
+		} catch (BusinessException be) {
+			System.out.println("[MB]Encherir-POST : listeErreurs = " + be.getListeCodesErreur());
+			request.setAttribute("erreurs", be.getListeCodesErreur());
+			
+			doGet(request, response);
+		}
+		
+		
 	}
 
 }

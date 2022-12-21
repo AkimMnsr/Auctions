@@ -14,18 +14,17 @@ public interface ArticleVenduDAO {
 	/**
 	 * @author mberger2022
 	 */
-	List<ArticleVendu> selectArticlesAll(int idUser, String filtreArticle, int filtreCategorie);
+	List<ArticleVendu> selectAchatsAll(int idUser, String filtreArticle, int filtreCategorie);
 	
-	List<ArticleVendu> selectEncheresEnCours(int idUser, String filtreArticle, int filtreCategorie);
+	List<ArticleVendu> selectAchatsEnCours(int idUser, String filtreArticle, int filtreCategorie);
 	
-	List<ArticleVendu> selectEncheresGagnees(int idUser, String filtreArticle, int filtreCategorie);
+	List<ArticleVendu> selectAchatsGagnes(int idUser, String filtreArticle, int filtreCategorie);
 	
 	List<ArticleVendu> selectVentesParam(int idUser, String pseudoUser, String filtreArticle, int filtreCategorie, boolean achatsVentes, 
 			               boolean mesVentesEnCours, boolean mesVentesNonDebutees, boolean mesVentesTerminees);
 	
-	ArticleVendu selectEnchereById(int idArticle);
-	
-	Utilisateur selectMeilleureEnchereById(int idArticle, int montantMax);
+	ArticleVendu selectById(int idArticle);
+
 		
 	/**
 	 * @author qswiderski2022

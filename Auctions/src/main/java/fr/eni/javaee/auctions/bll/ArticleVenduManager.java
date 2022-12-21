@@ -128,10 +128,10 @@ public class ArticleVenduManager {
 	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
 	 * @return
 	 */
-	public List<ArticleVendu> selectArticlesAll(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsAll(int idUser, String filtreArticle, int filtreCategorie) {
 		List<ArticleVendu> articles = null;
 		
-		articles = DAOFactory.getArticleVenduDAO().selectArticlesAll(idUser, filtreArticle, filtreCategorie);
+		articles = DAOFactory.getArticleVenduDAO().selectAchatsAll(idUser, filtreArticle, filtreCategorie);
 		
 		ajouterEtatVente(articles);
 		
@@ -147,9 +147,9 @@ public class ArticleVenduManager {
 	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
 	 * @return 
 	 */
-	public List<ArticleVendu> selectEncheresEnCours(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsEnCours(int idUser, String filtreArticle, int filtreCategorie) {
 		List<ArticleVendu> encheres = null;
-		encheres = DAOFactory.getArticleVenduDAO().selectEncheresEnCours(idUser, filtreArticle, filtreCategorie);
+		encheres = DAOFactory.getArticleVenduDAO().selectAchatsEnCours(idUser, filtreArticle, filtreCategorie);
 		
 		ajouterEtatVente(encheres);
 		
@@ -165,9 +165,9 @@ public class ArticleVenduManager {
 	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
 	 * @return 
 	 */
-	public List<ArticleVendu> selectEncheresGagnees(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsGagnes(int idUser, String filtreArticle, int filtreCategorie) {
 		List<ArticleVendu> encheres = null;
-		encheres = DAOFactory.getArticleVenduDAO().selectEncheresGagnees(idUser, filtreArticle, filtreCategorie);
+		encheres = DAOFactory.getArticleVenduDAO().selectAchatsGagnes(idUser, filtreArticle, filtreCategorie);
 		
 		ajouterEtatVente(encheres);
 		
@@ -224,27 +224,14 @@ public class ArticleVenduManager {
 	 * @param idArticle : numéro de l'article recherché
 	 * @return
 	 */
-	public ArticleVendu selectEnchereById(int idArticle) {
-		ArticleVendu enchere = null;
+	public ArticleVendu selectById(int idArticle) {
+		ArticleVendu article = null;
 		if (idArticle != 0) {
-			enchere = DAOFactory.getArticleVenduDAO().selectEnchereById(idArticle);
+			article = DAOFactory.getArticleVenduDAO().selectById(idArticle);
 		}
-		return enchere;
+		return article;
 	}
 	
-	/**
-	 * Retourne l'utilisateur ayant fait l'enchère du montant passé en paramètre 
-	 * pour l'article dont le numéro est passé en paramètre
-	 * @author mberger2022
-	 * @param idArticle : numéro de l'article dont on veut connaitre l'utilisateur ayant fait la meilleure enchère
-	 * @param montantMax : prix de vente de l'article (correspondant à l'enchère la plus haute ayant été faite)
-	 * @return
-	 */
-	public Utilisateur selectMeilleureEnchereById(int idArticle, int montantMax) {
-		Utilisateur gagnant = null;
-		if (idArticle != 0) {
-			gagnant = DAOFactory.getArticleVenduDAO().selectMeilleureEnchereById(idArticle, montantMax);
-		}
-		return gagnant;
-	}	
+	
+	
 }

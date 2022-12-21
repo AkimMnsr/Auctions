@@ -27,8 +27,11 @@ public class ServletAccueilUtilisateur extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		HttpSession session = request.getSession();
-		Utilisateur user = (Utilisateur)session.getAttribute("utilisateur");
+		HttpSession session = request.getSession(false);
+		Utilisateur user = null;
+		if (session != null) {
+			user = (Utilisateur)session.getAttribute("utilisateur");
+		}
 	
 		if (user == null) {
 			System.out.println("[MB]Accueil-GET - Pas d'utilisateur connecté");
@@ -64,7 +67,7 @@ public class ServletAccueilUtilisateur extends HttpServlet {
 		List<ArticleVendu> encheres = null;
 		if (user == null) { // non connecté
 			//lister toutes les articles en cours de vente (avec filtres éventuels)
-			encheres = ArticleVenduManager.getInstance().selectArticlesAll(0, filtreArticle, filtreCateg);
+			encheres = ArticleVenduManager.getInstance().selectAchatsAll(0, filtreArticle, filtreCateg);
 		}
 		else {	//connecté
 			//lister toutes les enchères en cours
@@ -87,7 +90,7 @@ public class ServletAccueilUtilisateur extends HttpServlet {
 		                               + ", " + filtreArticle + ", " + filtreCateg);								
 				}
 				if (encheresOuvertes) {
-					encheres = ArticleVenduManager.getInstance().selectArticlesAll(user.getNoUtilisateur(), filtreArticle, filtreCateg);
+					encheres = ArticleVenduManager.getInstance().selectAchatsAll(user.getNoUtilisateur(), filtreArticle, filtreCateg);
 				}
 				
 				//lister toutes les enchères en cours de l'utilisateur connecté
@@ -98,7 +101,7 @@ public class ServletAccueilUtilisateur extends HttpServlet {
 							            + ", " + filtreArticle + ", " + filtreCateg);								
 				}
 				if (mesEncheresEnCours) {
-					encheres = ArticleVenduManager.getInstance().selectEncheresEnCours(user.getNoUtilisateur(), filtreArticle, filtreCateg);		
+					encheres = ArticleVenduManager.getInstance().selectAchatsEnCours(user.getNoUtilisateur(), filtreArticle, filtreCateg);		
 				}	
 				
 				//lister toutes les enchères gagnées de l'utilisateur connecté
@@ -109,7 +112,7 @@ public class ServletAccueilUtilisateur extends HttpServlet {
 				            + ", " + filtreArticle + ", " + filtreCateg);									
 				}
 				if (mesEncheresGagnees) {
-					encheres = ArticleVenduManager.getInstance().selectEncheresGagnees(user.getNoUtilisateur(), filtreArticle, filtreCateg);		
+					encheres = ArticleVenduManager.getInstance().selectAchatsGagnes(user.getNoUtilisateur(), filtreArticle, filtreCateg);		
 				}
 			} else { // "Ventes" cochée
 					
