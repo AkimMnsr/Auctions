@@ -18,4 +18,6 @@ public interface UtilisateurDAO {
 	void delete(Utilisateur utilisateur);
 
 	Utilisateur profilUtilisateur(int idUser) throws BusinessException;
+	
+	public void modifierCredit (Utilisateur utilisateur);
 }
