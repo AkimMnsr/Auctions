@@ -16,6 +16,24 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	private static final String SELECT_PSEUDO_EMAIL = "SELECT pseudo, email FROM Utilisateurs WHERE pseudo = ? and email = ? ;";
 	private static final String REMOVE_USER = "DELETE FROM Utilisateurs WHERE no_utilisateur = ? ;";
 	private static final String SELECT_ON_ID = "SELECT * FROM utilisateurs WHERE no_utilisateur = ?;";
+	private static final String MODIFIER_CREDIT = "UPDATE Utilisateurs SET credit = ? WHERE no_utilisateur = ? ;";
+	
+	
+
+	public void modifierCredit (Utilisateur utilisateur) {		
+		
+		try ( Connection cnx = ConnectionProvider.getConnection() ) {
+			PreparedStatement pstmt = cnx.prepareStatement(MODIFIER_CREDIT);			
+			pstmt.setInt(2, utilisateur.getNoUtilisateur());
+			pstmt.setInt(1, utilisateur.getCredit());
+			pstmt.executeUpdate();			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 
 	@Override
 	public void delete(Utilisateur utilisateur) {
@@ -134,6 +152,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		return utilisateurCnx;
 	}
 
+	/**
+	 * Methode permettant d'afficher l'utilisateur d'un article 
+	 */
 	@Override
 	public Utilisateur profilUtilisateur(int idUser) throws BusinessException {
 
@@ -170,6 +191,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		return utilisateurProfil;
 	}
 
+	/**
+	 * Methode permettant de modifier les données de l'utilisateur / cas particulier si l'user change de mdp 
+	 */
 	@Override
 	public void modifier(Utilisateur utilisateur, String mdpSession) throws BusinessException {
 
