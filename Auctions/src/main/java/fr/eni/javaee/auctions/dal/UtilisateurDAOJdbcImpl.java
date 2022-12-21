@@ -10,7 +10,7 @@ import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 
 public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
-	private static final String MODIFIER = "UPDATE Utilisateurs SET pseudo = ?, nom = ? ,  prenom = ?,  email = ?,  telephone = ?,  rue = ?,  code_postal = ?,  ville = ?,  mot_de_passe = ? credit = ? WHERE no_utilisateur = ? ;";
+	private static final String MODIFIER = "UPDATE Utilisateurs SET pseudo = ?, nom = ? ,  prenom = ?,  email = ?,  telephone = ?,  rue = ?,  code_postal = ?,  ville = ?,  mot_de_passe = ? WHERE no_utilisateur = ? ;";
 	private static final String INSERT = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE (pseudo = ? or email = ?) and mot_de_passe = ? ;";
 	private static final String SELECT_PSEUDO_EMAIL = "SELECT pseudo, email FROM Utilisateurs WHERE pseudo = ? and email = ? ;";
@@ -189,9 +189,8 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				pstmt.setString(9, mdpSession);
 			} else {				
 				pstmt.setString(9, utilisateur.getMotDePasse());
-			}
-			pstmt.setInt(10, utilisateur.getCredit());
-			pstmt.setInt(11, utilisateur.getNoUtilisateur());
+			}			
+			pstmt.setInt(10, utilisateur.getNoUtilisateur());
 
 			pstmt.executeUpdate();
 		} catch (Exception e) {
