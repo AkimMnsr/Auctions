@@ -145,7 +145,8 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 			ResultSet rs = null;
 			pstmt.setInt(1, idUser);
 			rs = pstmt.executeQuery();
-
+  
+			
 			while (rs.next()) {
 				utilisateurProfil = new Utilisateur();
 				utilisateurProfil.setNoUtilisateur(rs.getInt("no_utilisateur"));
