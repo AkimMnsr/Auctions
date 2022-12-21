@@ -157,6 +157,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				utilisateurProfil.setRue(rs.getString("rue"));
 				utilisateurProfil.setCodePostal(rs.getString("code_postal"));
 				utilisateurProfil.setVille(rs.getString("ville"));
+				utilisateurProfil.setCredit(rs.getInt("credit"));
 			}
 
 		} catch (Exception e) {
