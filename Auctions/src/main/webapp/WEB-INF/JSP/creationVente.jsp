@@ -120,12 +120,12 @@
 				<c:when test="${!empty requestScope.article && !empty requestScope.article.miseAPrix}">
 				<label for="prix">Mise à prix:</label> 
 				<input type="number" step="1"
-					value="0" min="1" name="Prix" value="${requestScope.article.miseAPrix}">
+					 min="0" name="Prix" value="${requestScope.article.miseAPrix}">
 				</c:when>
 			<c:otherwise>
 				<label for="prix">Mise à prix:</label> 
 				<input type="number" step="1"
-					value="0" min="1" name="Prix">
+					value="0" min="0" name="Prix">
 			</c:otherwise>
 			</c:choose>	
 			</div>
@@ -165,11 +165,11 @@
 				<c:choose>
 				<c:when test="${!empty requestScope.article && !empty requestScope.article.lieuRetrait.rue}">
 					<label for="Rue">Rue:</label>
-					<input type="text" id="Rue" name="Rue" value= "${sessionScope.article.lieuRetrait.rue}"required>
+					<input type="text" id="Rue" name="Rue" value= "${requestScope.article.lieuRetrait.rue}" required>
 					</c:when>
 				<c:otherwise>
 					<label for="Rue">Rue:</label>
-					<input type="text" id="Rue" name="Rue" value= "${sessionScope.utilisateur.lieuRetrait.rue}"required>
+					<input type="text" id="Rue" name="Rue" value= "${sessionScope.utilisateur.rue}" required>
 				</c:otherwise>
 				</c:choose>			
 				</div>
@@ -180,11 +180,11 @@
 				<c:choose>
 				<c:when test="${!empty requestScope.article && !empty requestScope.article.lieuRetrait.codePostal}">
 					<label for="CodePostal">CodePostal:</label>
-					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.article.lieuRetrait.codePostal}"required>
+					<input  type="number" id="CodePostal" name="CodePostal"  value= "${requestScope.article.lieuRetrait.codePostal}" required>
 					</c:when>
 				<c:otherwise>
 					<label for="CodePostal">CodePostal:</label>
-					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.utilisateur.codePostal}"required>
+					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.utilisateur.codePostal}" required>
 				</c:otherwise>
 				</c:choose>
 				</div>
@@ -195,11 +195,11 @@
 				<c:choose>
 				<c:when test="${!empty requestScope.article && !empty requestScope.article.lieuRetrait.ville}">
 					<label for="Ville">Ville:</label>
-					<input type="text" id="Ville" name="Ville" value= "${sessionScope.article.lieuRetrait.ville}"required>
+					<input type="text" id="Ville" name="Ville" value= "${requestScope.article.lieuRetrait.ville}" required>
 					</c:when>
 				<c:otherwise>
 					<label for="Ville">Ville:</label>
-					<input type="text" id="Ville" name="Ville" value= "${sessionScope.utilisateur.ville}"required>
+					<input type="text" id="Ville" name="Ville" value= "${sessionScope.utilisateur.ville}" required>
 				</c:otherwise>
 				</c:choose>
 				</div>
