@@ -9,6 +9,7 @@ import java.util.List;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.ArticleVendu;
 import fr.eni.javaee.auctions.bo.Categorie;
+import fr.eni.javaee.auctions.bo.EtatVente;
 import fr.eni.javaee.auctions.bo.Retrait;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 import fr.eni.javaee.auctions.dal.DAOFactory;
@@ -35,11 +36,9 @@ public class ArticleVenduManager {
 
 	//AUTRES METHODES D'INSTANCE
 	
-	
-	public List<ArticleVendu> selectVentes(int idUser) {
-		return DAOFactory.getArticleVenduDAO().selectVentes(idUser);
-	}
-	
+	/**
+	 * @author qswiderski2022
+	 */
 	public ArticleVendu insertVente(Utilisateur user, String nomArticle, String description, int categorie,
 			Integer miseAPrix, LocalDate dateDebEncheres, LocalDate dateFinEncheres, String rue, String codePostal,
 			String ville) throws BusinessException {
@@ -164,9 +163,14 @@ public class ArticleVenduManager {
 	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
 	 * @return
 	 */
-	public List<ArticleVendu> selectArticlesAll(String filtreArticle, int filtreCategorie) {
-						
-		return DAOFactory.getArticleVenduDAO().selectArticlesAll(filtreArticle, filtreCategorie);
+	public List<ArticleVendu> selectAchatsAll(int idUser, String filtreArticle, int filtreCategorie) {
+		List<ArticleVendu> articles = null;
+		
+		articles = DAOFactory.getArticleVenduDAO().selectAchatsAll(idUser, filtreArticle, filtreCategorie);
+		
+		ajouterEtatVente(articles);
+		
+		return articles;
 	}
 	
 	/**
@@ -178,9 +182,13 @@ public class ArticleVenduManager {
 	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
 	 * @return 
 	 */
-	public List<ArticleVendu> selectEncheresEnCours(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsEnCours(int idUser, String filtreArticle, int filtreCategorie) {
+		List<ArticleVendu> encheres = null;
+		encheres = DAOFactory.getArticleVenduDAO().selectAchatsEnCours(idUser, filtreArticle, filtreCategorie);
 		
-		return DAOFactory.getArticleVenduDAO().selectEncheresEnCours(idUser, filtreArticle, filtreCategorie);
+		ajouterEtatVente(encheres);
+		
+		return encheres;
 	}
 
 	/**
@@ -192,10 +200,73 @@ public class ArticleVenduManager {
 	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
 	 * @return 
 	 */
-	public List<ArticleVendu> selectEncheresGagnees(int idUser, String filtreArticle, int filtreCategorie) {
+	public List<ArticleVendu> selectAchatsGagnes(int idUser, String filtreArticle, int filtreCategorie) {
+		List<ArticleVendu> encheres = null;
+		encheres = DAOFactory.getArticleVenduDAO().selectAchatsGagnes(idUser, filtreArticle, filtreCategorie);
 		
-		return DAOFactory.getArticleVenduDAO().selectEncheresGagnees(idUser, filtreArticle, filtreCategorie);
+		ajouterEtatVente(encheres);
+		
+		return encheres;
 	}
+	/**
+	 * Alimente l'attribue etatVente des articles de la liste passée en paramètre
+	 * @author mberger2022
+	 * @param liste d'objet de type ArticleVendu
+	 */
+	private void ajouterEtatVente(List<ArticleVendu> articles) {
+		if (articles != null) {
+			for (ArticleVendu article : articles) {
+				if (article.getDateDebEncheres().isAfter(LocalDate.now())) {
+					article.setEtatVente(EtatVente.NON_DEBUTEE);
+				} else if (article.getDateFinEncheres().isAfter(LocalDate.now())) {
+					article.setEtatVente(EtatVente.EN_COURS);
+				} else {
+					article.setEtatVente(EtatVente.TERMINEE);
+				}
+			}		
+		}
+	}
+	
+	/**
+	 * Liste de toutes les ventes en cours de l'utilisateur connecté
+	 * dont le numéro est passé en paramètre
+	 * @author mberger2022
+	 * @param idUser
+	 * @param pseudo
+	 * @param filtreArticle : contenu de la zone "l'article contient..."
+	 * @param filtreCategorie : numéro de la catégorie sélectionnée (0 si toutes)
+	 * @param achatsVentes
+	 * @param mesVentesEnCours
+	 * @param mesVentesNonDebutees
+	 * @param mesVentesTerminees
+	 * @return liste d'objet de type ArticleVendu
+	 */
+	public List<ArticleVendu> selectVentesParam(int idUser, String pseudo, String filtreArticle, int filtreCategorie, 
+            									boolean achatsVentes, boolean mesVentesEnCours,
+            									boolean mesVentesNonDebutees, boolean mesVentesTerminees) {
+		List<ArticleVendu> ventes = null;
+		
+		ventes = DAOFactory.getArticleVenduDAO().selectVentesParam(idUser, pseudo, filtreArticle, filtreCategorie,
+																	achatsVentes, mesVentesEnCours,
+																	mesVentesNonDebutees,  mesVentesTerminees);
+		
+		return ventes;
+	}
+	
+	/**
+	 * Retourne un article vendu en cours d'enchère
+	 * @author mberger2022
+	 * @param idArticle : numéro de l'article recherché
+	 * @return
+	 */
+	public ArticleVendu selectById(int idArticle) {
+		ArticleVendu article = null;
+		if (idArticle != 0) {
+			article = DAOFactory.getArticleVenduDAO().selectById(idArticle);
+		}
+		return article;
+	}
+	
 	
 	
 }

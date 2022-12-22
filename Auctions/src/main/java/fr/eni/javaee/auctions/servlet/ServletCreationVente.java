@@ -70,8 +70,8 @@ public class ServletCreationVente extends HttpServlet {
 			try {
 			int idArticle = Integer.parseInt(request.getParameter("idArticle"));
 			
-			ArticleVendu venteModif = ArticleVenduManager.getInstance().updateVente(user, nomArticle, description,
-					categorie, miseAPrix, dateDebEncheres, dateFinEncheres, rue, codePostal, ville);
+			 ArticleVenduManager.getInstance().updateVente(user, nomArticle, description,
+					categorie, miseAPrix, dateDebEncheres, dateFinEncheres, rue, codePostal, ville, idArticle);
 			} catch (BusinessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

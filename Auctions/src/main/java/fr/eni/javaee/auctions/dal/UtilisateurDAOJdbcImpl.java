@@ -14,6 +14,40 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	private static final String INSERT = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String SELECT_ID_CONNEXION = " SELECT * FROM utilisateurs WHERE (pseudo = ? or email = ?) and mot_de_passe = ? ;";
 	private static final String SELECT_PSEUDO_EMAIL = "SELECT pseudo, email FROM Utilisateurs WHERE pseudo = ? and email = ? ;";
+	private static final String REMOVE_USER = "DELETE FROM Utilisateurs WHERE no_utilisateur = ? ;";
+	private static final String SELECT_ON_ID = "SELECT * FROM utilisateurs WHERE no_utilisateur = ?;";
+	private static final String MODIFIER_CREDIT = "UPDATE Utilisateurs SET credit = ? WHERE no_utilisateur = ? ;";
+	
+	
+
+	public void modifierCredit (Utilisateur utilisateur) {		
+		
+		try ( Connection cnx = ConnectionProvider.getConnection() ) {
+			PreparedStatement pstmt = cnx.prepareStatement(MODIFIER_CREDIT);			
+			pstmt.setInt(2, utilisateur.getNoUtilisateur());
+			pstmt.setInt(1, utilisateur.getCredit());
+			pstmt.executeUpdate();			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	@Override
+	public void delete(Utilisateur utilisateur) {
+
+		try (Connection cnx = ConnectionProvider.getConnection()) {
+			PreparedStatement pstmt = cnx.prepareStatement(REMOVE_USER);
+			pstmt.setInt(1, utilisateur.getNoUtilisateur());
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public boolean uniciteIdentifiant(String pseudo, String email) {
 		Utilisateur userVerif = null;
@@ -118,6 +152,48 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		return utilisateurCnx;
 	}
 
+	/**
+	 * Methode permettant d'afficher l'utilisateur d'un article 
+	 */
+	@Override
+	public Utilisateur profilUtilisateur(int idUser) throws BusinessException {
+
+		Utilisateur utilisateurProfil = null;
+
+		try (Connection cnx = ConnectionProvider.getConnection()) {
+
+			PreparedStatement pstmt = cnx.prepareStatement(SELECT_ON_ID);
+			ResultSet rs = null;
+			pstmt.setInt(1, idUser);
+			rs = pstmt.executeQuery();
+  
+			
+			while (rs.next()) {
+				utilisateurProfil = new Utilisateur();
+				utilisateurProfil.setNoUtilisateur(rs.getInt("no_utilisateur"));
+				utilisateurProfil.setPseudo(rs.getString("pseudo"));
+				utilisateurProfil.setNom(rs.getString("nom"));
+				utilisateurProfil.setPrenom(rs.getString("prenom"));
+				utilisateurProfil.setEmail(rs.getString("email"));
+				utilisateurProfil.setTelephone(rs.getString("telephone"));
+				utilisateurProfil.setRue(rs.getString("rue"));
+				utilisateurProfil.setCodePostal(rs.getString("code_postal"));
+				utilisateurProfil.setVille(rs.getString("ville"));
+				utilisateurProfil.setCredit(rs.getInt("credit"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			BusinessException be = new BusinessException();
+			throw be;
+		}
+		System.out.println(utilisateurProfil);
+		return utilisateurProfil;
+	}
+
+	/**
+	 * Methode permettant de modifier les données de l'utilisateur / cas particulier si l'user change de mdp 
+	 */
 	@Override
 	public void modifier(Utilisateur utilisateur, String mdpSession) throws BusinessException {
 
@@ -135,10 +211,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 			if (utilisateur.getMotDePasse().equals("") || utilisateur.getMotDePasse().isBlank()
 					|| utilisateur.getMotDePasse() == null) {
 				pstmt.setString(9, mdpSession);
-			} else {
+			} else {				
 				pstmt.setString(9, utilisateur.getMotDePasse());
-
-			}
+			}			
 			pstmt.setInt(10, utilisateur.getNoUtilisateur());
 
 			pstmt.executeUpdate();

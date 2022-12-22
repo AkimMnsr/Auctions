@@ -14,4 +14,10 @@ public interface UtilisateurDAO {
 	void modifier(Utilisateur utilisateur, String mdpSession) throws BusinessException;
 	
 	public boolean uniciteIdentifiant (String pseudo, String email);
+
+	void delete(Utilisateur utilisateur);
+
+	Utilisateur profilUtilisateur(int idUser) throws BusinessException;
+	
+	public void modifierCredit (Utilisateur utilisateur);
 }

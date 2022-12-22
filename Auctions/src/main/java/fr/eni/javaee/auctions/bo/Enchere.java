@@ -18,15 +18,20 @@ public class Enchere implements Serializable {
 	
 	//CONSTRUCTEUR VIDE
 	public Enchere () { }
-		
+
+	public Enchere(int montantEnchere, 
+			   Utilisateur acheteur, ArticleVendu article) {
+	this();
+	this.montantEnchere = montantEnchere;
+	this.acheteur = acheteur;
+	this.article = article;
+	}
+	
 	public Enchere(int noEnchere, LocalDateTime dateEnchere, int montantEnchere, 
 				   Utilisateur acheteur, ArticleVendu article) {
-		this();
+		this(montantEnchere, acheteur, article);
 		this.noEnchere = noEnchere;
 		this.dateEnchere = dateEnchere;
-		this.montantEnchere = montantEnchere;
-		this.acheteur = acheteur;
-		this.article = article;
 	}
 	
 	//METHODES D'INSTANCE

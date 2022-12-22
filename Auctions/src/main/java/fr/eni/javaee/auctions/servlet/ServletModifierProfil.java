@@ -33,7 +33,6 @@ public class ServletModifierProfil extends HttpServlet {
 		
 		HttpSession session = request.getSession();	
 		Utilisateur userMdp = (Utilisateur) session.getAttribute("utilisateur");
-		String pseudoSession = userMdp.getPseudo();
 		String mdpSession = userMdp.getMotDePasse();
 		
 		int idSession = userMdp.getNoUtilisateur();

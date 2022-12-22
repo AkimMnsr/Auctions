@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fr.eni.javaee.auctions.be.BusinessException;
+import fr.eni.javaee.auctions.bll.UtilisateurManager;
+import fr.eni.javaee.auctions.bo.Utilisateur;
+
 
 @WebServlet("/ProfilOtherUser")
 public class ServletVoirAutreProfil extends HttpServlet {
@@ -16,14 +20,34 @@ public class ServletVoirAutreProfil extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		int idUser = Integer.parseInt(request.getParameter("idUser"));
+		
+		try {
+			Utilisateur userToShow = UtilisateurManager.getInstance().profilUtilisateur (idUser);
+			request.setAttribute("pseudo", userToShow.getPseudo());
+			request.setAttribute("nom", userToShow.getNom());
+			request.setAttribute("prenom", userToShow.getPrenom());
+			request.setAttribute("email", userToShow.getEmail());
+			request.setAttribute("telephone", userToShow.getTelephone());
+			request.setAttribute("rue", userToShow.getRue());
+			request.setAttribute("codePostal", userToShow.getCodePostal());
+			request.setAttribute("ville", userToShow.getVille());
+		
+		} catch (BusinessException e) {			
+			e.printStackTrace();
+		}
+		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/voirAutreProfil.jsp");
 		rd.forward(request, response);
+		
 	}
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+	
+	
+	
 	}
 
 }

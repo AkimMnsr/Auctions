@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import fr.eni.javaee.auctions.be.BusinessException;
 import fr.eni.javaee.auctions.bo.Utilisateur;
 import fr.eni.javaee.auctions.dal.DAOFactory;
-import fr.eni.javaee.auctions.dal.UtilisateurDAO;
 
 public class UtilisateurManager {
 
@@ -19,6 +18,11 @@ public class UtilisateurManager {
 	}
 
 	private UtilisateurManager() {
+	}
+	
+	public void delete (Utilisateur utilisateur) {
+		
+		DAOFactory.getUtilisateurDAO().delete(utilisateur);
 	}
 
 	public Utilisateur insert(String pseudo, String nom, String prenom, String email, String telephone, String rue,
@@ -66,6 +70,12 @@ public class UtilisateurManager {
 			throw be;
 		}
 		return DAOFactory.getUtilisateurDAO().verifUtilisateur(pseudo, mdp);
+	}
+	
+public Utilisateur profilUtilisateur(int idUser) throws BusinessException {
+		
+	
+		return DAOFactory.getUtilisateurDAO().profilUtilisateur (idUser);
 	}
 	
 	public void modifier (Utilisateur utilisateur, String mdpSession, String ancienMdp, String nouveauMDP, String confirmationMdp) throws BusinessException {
@@ -169,5 +179,7 @@ public class UtilisateurManager {
 			be.ajouterErreur(CodeErreurBLLUtilisateur.REGLES_UTILISATEUR_VALIDER_MDP_ERREUR);
 		}
 	}
+
+	
 
 }
