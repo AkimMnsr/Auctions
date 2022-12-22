@@ -321,6 +321,11 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 				    + " WHERE date_debut_encheres <= GETDATE()"
 				    + " AND date_fin_encheres >= GETDATE()"
 				    + " AND no_utilisateur = ?";
+		} else if (mesVentesNonDebutees) {
+			requete = "SELECT no_article, nom_article, prix_vente, prix_initial, date_debut_encheres, date_fin_encheres, no_utilisateur"
+			        + " FROM Articles_vendus "
+				    + " WHERE date_debut_encheres > GETDATE()"
+				    + " AND no_utilisateur = ?";
 		}
 		
 		return requete;
@@ -351,6 +356,8 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 	@Override
 	public ArticleVendu selectById(int idArticle) {
 		ArticleVendu article = null;
+		
+		System.out.println("DAL idArticle: " + idArticle);
 		//1.connexion
 		try (Connection cnx = ConnectionProvider.getConnection()) {
 			//2. requête
@@ -377,6 +384,7 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 				int noUser = rs.getInt("no_user");
 				String pseudo = rs.getString("pseudo");
 				
+				System.out.println("DAL retrait :" + rue + ", " + codePostal + "," + ville);
 				Utilisateur vendeur = new Utilisateur(noUser, pseudo);
 				Categorie categorie = new Categorie(categLibelle);
 				Retrait retrait = new Retrait(rue, codePostal, ville);
@@ -388,6 +396,7 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			//erreur connexion base
 			e.printStackTrace();
 		}		
+		System.out.println("DAL article: " + article);
 		return article;
 	}
 	

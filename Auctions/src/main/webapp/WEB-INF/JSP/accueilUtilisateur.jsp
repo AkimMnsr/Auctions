@@ -171,7 +171,7 @@ body {
 							&& !empty sessionScope.utilisateur 
 							&& sessionScope.utilisateur.noUtilisateur == e.proprietaire.noUtilisateur
 							&& e.etatVente == 0 }">
-				<a href="${pageContext.request.contextPath }/NewSale?idArticle=${e.noArticle } ">
+				<a href="${pageContext.request.contextPath }/UpdateSale?idArticle=${e.noArticle } ">
 						<strong>${e.nomArticle }</strong></a>
 
 			</c:when>

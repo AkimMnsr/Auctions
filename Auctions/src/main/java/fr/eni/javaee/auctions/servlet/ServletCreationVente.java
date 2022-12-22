@@ -26,12 +26,15 @@ public class ServletCreationVente extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		int idArticle = Integer.parseInt(request.getParameter("idArticle"));
-		//System.out.println("[MB]Encherir-GET : idArticle = " + idArticle);
 		
-		ArticleVendu article = ArticleVenduManager.getInstance().selectById(idArticle);
-		request.setAttribute("article", article); 
+		if (request.getServletPath().equals("/UpdateSale")) {
+			int idArticle = Integer.parseInt(request.getParameter("idArticle"));
+			System.out.println("[MB]CréationVente-GET : idArticle = " + idArticle);
+			
+			ArticleVendu article = ArticleVenduManager.getInstance().selectById(idArticle);
+			System.out.println("[MB]CréationVente-GET article(retrait): " + article.getLieuRetrait());
+			request.setAttribute("article", article); 
+		}
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/creationVente.jsp");
 		rd.forward(request, response);
@@ -77,8 +80,7 @@ public class ServletCreationVente extends HttpServlet {
 			e.printStackTrace();
 		}	
 		}
-			
-			
+		
 		
 
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/accueilUtilisateur.jsp");

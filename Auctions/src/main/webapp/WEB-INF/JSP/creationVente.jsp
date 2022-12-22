@@ -163,13 +163,13 @@
 			<div>
 				<div>
 				<c:choose>
-				<c:when test="${!empty requestScope.article && !empty requestScope.article.rue}">
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.lieuRetrait.rue}">
 					<label for="Rue">Rue:</label>
-					<input type="text" id="Rue" name="Rue" value= "${sessionScope.article.rue}"required>
+					<input type="text" id="Rue" name="Rue" value= "${sessionScope.article.lieuRetrait.rue}"required>
 					</c:when>
 				<c:otherwise>
 					<label for="Rue">Rue:</label>
-					<input type="text" id="Rue" name="Rue" value= "${sessionScope.utilisateur.rue}"required>
+					<input type="text" id="Rue" name="Rue" value= "${sessionScope.utilisateur.lieuRetrait.rue}"required>
 				</c:otherwise>
 				</c:choose>			
 				</div>
@@ -178,9 +178,9 @@
 
 				<div>
 				<c:choose>
-				<c:when test="${!empty requestScope.article && !empty requestScope.article.codePostal}">
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.lieuRetrait.codePostal}">
 					<label for="CodePostal">CodePostal:</label>
-					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.article.codePostal}"required>
+					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.article.lieuRetrait.codePostal}"required>
 					</c:when>
 				<c:otherwise>
 					<label for="CodePostal">CodePostal:</label>
@@ -193,9 +193,9 @@
 
 				<div>
 				<c:choose>
-				<c:when test="${!empty requestScope.article && !empty requestScope.article.ville}">
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.lieuRetrait.ville}">
 					<label for="Ville">Ville:</label>
-					<input type="text" id="Ville" name="Ville" value= "${sessionScope.article.ville}"required>
+					<input type="text" id="Ville" name="Ville" value= "${sessionScope.article.lieuRetrait.ville}"required>
 					</c:when>
 				<c:otherwise>
 					<label for="Ville">Ville:</label>

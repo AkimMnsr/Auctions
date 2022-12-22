@@ -129,11 +129,16 @@ public class ServletAccueilUtilisateur extends HttpServlet {
 				if (request.getAttribute("mesVentesEnCours") != null) {
 					mesVentesEnCours = (boolean)request.getAttribute("mesVentesEnCours");
 				}
+				
+				if (request.getAttribute("mesVentesNonDebutees") != null) {
+					mesVentesNonDebutees = (boolean)request.getAttribute("mesVentesNonDebutees");
+				}
 				if (request.getAttribute("mesVentesTerminees") != null) {
 					mesVentesTerminees = (boolean)request.getAttribute("mesVentesTerminees");
 				}
-				if (mesVentesNonDebutees || mesVentesTerminees) {
-					System.out.println("Partie VENTES : mesVentesEnCours, mesVentesTerminees NON GERE");  
+				
+				if (mesVentesTerminees) {
+					System.out.println("Partie VENTES : mesVentesTerminees NON GERE");  
 				} else {
 					encheres = ArticleVenduManager.getInstance().selectVentesParam(user.getNoUtilisateur(), user.getPseudo(),
 							   filtreArticle, filtreCateg,

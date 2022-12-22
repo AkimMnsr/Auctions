@@ -263,6 +263,7 @@ public class ArticleVenduManager {
 		ArticleVendu article = null;
 		if (idArticle != 0) {
 			article = DAOFactory.getArticleVenduDAO().selectById(idArticle);
+			System.out.println("BLL article(retrait): " + article.getLieuRetrait());
 		}
 		return article;
 	}

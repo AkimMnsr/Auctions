@@ -22,12 +22,25 @@ public class Retrait implements Serializable {
 		this.ville = ville;
 	}
 
-
-
+	//AUTRES METHODES D'INSTANCE
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Retrait [rue=");
+		builder.append(rue);
+		builder.append(", codePostal=");
+		builder.append(codePostal);
+		builder.append(", ville=");
+		builder.append(ville);
+		builder.append("]");
+		return builder.toString();
+	}
+	
 	//GETTERS ET SETTERS
 	public String getRue() {
 		return rue;
 	}
+	
 	public void setRue(String rue) {
 		this.rue = rue;
 	}
