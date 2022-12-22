@@ -153,7 +153,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	}
 
 	/**
-	 * Methode permettant d'afficher l'utilisateur d'un article 
+	 * Méthode retournant l'utilisateur correspondant au numéro passé en paramètre
 	 */
 	@Override
 	public Utilisateur profilUtilisateur(int idUser) throws BusinessException {
@@ -161,13 +161,37 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		Utilisateur utilisateurProfil = null;
 
 		try (Connection cnx = ConnectionProvider.getConnection()) {
+			
+			//appel de la méthode surchargée
+			utilisateurProfil = profilUtilisateur(idUser, cnx);
+			
+		} catch (SQLException e) { //erreur liée à la connexion
+			e.printStackTrace();
+			BusinessException be = new BusinessException();
+			throw be;
+		}
+		System.out.println("PROFIL " + utilisateurProfil);
+		return utilisateurProfil;
+	}
+	
+	/**
+	 * Surcharge de la méthode retournant l'utilisateur correspondant au numéro passé en paramètre
+	 * @author mberger2022
+	 * @param idUser : numéro de l'utilisateur recherché
+	 * @param cnx : objet de type Connection permettant d'utiliser une connexion déjà ouverte
+	 * @return Objet de type Utilisateur
+	 * @throws BusinessException
+	 */
+	public Utilisateur profilUtilisateur(int idUser, Connection cnx) throws BusinessException {
 
+		Utilisateur utilisateurProfil = null;
+
+		try {
 			PreparedStatement pstmt = cnx.prepareStatement(SELECT_ON_ID);
 			ResultSet rs = null;
 			pstmt.setInt(1, idUser);
 			rs = pstmt.executeQuery();
-  
-			
+	  
 			while (rs.next()) {
 				utilisateurProfil = new Utilisateur();
 				utilisateurProfil.setNoUtilisateur(rs.getInt("no_utilisateur"));
@@ -182,12 +206,12 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 				utilisateurProfil.setCredit(rs.getInt("credit"));
 			}
 
-		} catch (Exception e) {
+		} catch (SQLException e) { // erreur liée à la requête effectuée
 			e.printStackTrace();
 			BusinessException be = new BusinessException();
 			throw be;
 		}
-		System.out.println(utilisateurProfil);
+		System.out.println("PROFIL-CNX " + utilisateurProfil);
 		return utilisateurProfil;
 	}
 

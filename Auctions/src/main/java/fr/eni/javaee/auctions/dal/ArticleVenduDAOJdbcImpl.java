@@ -47,6 +47,8 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			+ " INNER JOIN Utilisateurs u ON  a.no_utilisateur = u.no_utilisateur"
 			+ " WHERE date_debut_encheres <= GETDATE()"
 			+ " AND date_fin_encheres >= GETDATE()"
+			+ " AND e.montant_enchere = (SELECT MAX(montant_enchere) FROM Encheres"
+			+ "                          WHERE no_utilisateur = ? AND no_article = e.no_article)"
 			+ " AND e.no_utilisateur = ?";
 	
 	private static final String SELECT_ACHATS_GAGNES = 
@@ -159,6 +161,7 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			PreparedStatement pstmt = cnx.prepareStatement(requeteAvecFiltre);
 			
 			pstmt.setInt(1, idUser);
+			pstmt.setInt(2, idUser);
 			// Catégorie différente de "0-Toutes" ET article renseigné
 			if (filtreCategorie != 0 && ! filtreArticle.equals("")) { 
 				pstmt.setInt(2, filtreCategorie);
