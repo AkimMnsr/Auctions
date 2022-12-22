@@ -25,6 +25,7 @@ public interface ArticleVenduDAO {
 	
 	ArticleVendu selectById(int idArticle);
 
+	public void updatePrixVente (ArticleVendu article) throws BusinessException;
 		
 	/**
 	 * @author qswiderski2022

@@ -1,3 +1,4 @@
+<%@page import="fr.eni.javaee.auctions.messages.LecteurMessagesEnchere"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -20,6 +21,12 @@
 
 	<h2>Détail vente</h2>
 	
+	<c:if test="${!empty requestScope.erreurs }">
+		<c:forEach var="err" items="${requestScope.erreurs }">
+		 	<p style="color: red;">ERREUR : ${LecteurMessagesEnchere.getMessageErreur(err) }</p> 
+		</c:forEach>
+	</c:if>
+		
 	<c:choose>
 	<c:when test="${!empty requestScope.enchere }">
 		<div>
@@ -68,12 +75,21 @@ ${requestScope.enchere.article.lieuRetrait.codePostal } ${requestScope.enchere.a
 			<input type="text" id="vendeur" disabled="disabled"
 				   value="${requestScope.enchere.article.proprietaire.pseudo }">
 		</div>
+<!--  		
 		<div>
 			<label for="credit">Mon crédit : </label>
-			<input type="text" id="credit" disabled="disabled"
-				   value="${requestScope.enchere.acheteur.credit } points">
+			<c:choose>
+			<c:when test="${!empty sessionScope.utilisateur }">
+				<input type="text" id="credit" disabled="disabled"
+				       value="${sessionScope.utilisateur.credit } points">
+			</c:when>
+			<c:otherwise>
+				  <input type="text" id="credit" disabled="disabled"
+				       value="Non renseigné">     
+			</c:otherwise>
+			</c:choose>
 		</div>
-		
+-->		
 	</c:when>	
 	<c:otherwise>
 		<h3>AUCUNE VENTE A AFFICHER !</h3>

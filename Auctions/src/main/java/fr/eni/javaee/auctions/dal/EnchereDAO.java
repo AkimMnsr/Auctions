@@ -13,5 +13,5 @@ public interface EnchereDAO {
 
 	Enchere selectMeilleureEnchere(int idArticle, int montantMax);
 	
-	public void insertNouvelleEnchere(Enchere enchere, int idAcheteurPrec);
+	public void insertNouvelleEnchere(Enchere enchere, int idAcheteurPrec) throws BusinessException;
 }

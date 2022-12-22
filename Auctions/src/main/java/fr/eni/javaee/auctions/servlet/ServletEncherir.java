@@ -75,6 +75,10 @@ public class ServletEncherir extends HttpServlet {
 		
 		try {
 			EnchereManager.getInstance().insertNouvelleEnchere(user.getNoUtilisateur(), idArticle, proposition, idAcheteurPrec);
+			
+			
+			response.sendRedirect(request.getContextPath()+ "/WelcomePageUser");
+		
 		} catch (BusinessException be) {
 			System.out.println("[MB]Encherir-POST : listeErreurs = " + be.getListeCodesErreur());
 			request.setAttribute("erreurs", be.getListeCodesErreur());

@@ -58,7 +58,10 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			+ " INNER JOIN Categories c ON a.no_categorie = c.no_categorie"
 			+ " INNER JOIN Retraits r on a.no_article = r.no_article"
 			+ " WHERE a.no_article = ?;";	
-													
+			
+	private static final String UPDATE_PRIX =
+			"UPDATE Articles_vendus SET prix_vente = ? WHERE no_article = ?;";
+	
 	/**
 	 * @author mberger2022
 	 */
@@ -316,7 +319,6 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 		return requete;
 	}
 
-
 	/**
 	 * @author mberger2022
 	 */
@@ -380,6 +382,34 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 			e.printStackTrace();
 		}		
 		return article;
+	}
+	
+	/**
+	 * @author mberger2022
+	 * @param objet de type ArticleVendu dont on souhaite mettre à jour le prix
+	 * @throws BusinessException 
+	 */	
+	public void updatePrixVente (ArticleVendu article) throws BusinessException {
+				
+		if (article == null) {
+			BusinessException be = new BusinessException();
+			be.ajouterErreur(CodesErreursArticleDAL.INSERT_OBJECT_NULL);
+			throw be;
+		}
+		
+		try (Connection cnx = ConnectionProvider.getConnection()) {
+			PreparedStatement pstmt = cnx.prepareStatement(UPDATE_PRIX);
+			pstmt.setInt(1, article.getPrixVente());
+			pstmt.setInt(2, article.getNoArticle() );
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			BusinessException be = new BusinessException();
+			be.ajouterErreur(CodesErreursArticleDAL.INSERT_OBJECT_ECHEC);
+			throw be;
+		}		
 	}
 	
 	
