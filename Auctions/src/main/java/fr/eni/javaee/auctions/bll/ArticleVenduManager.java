@@ -117,10 +117,45 @@ public class ArticleVenduManager {
 			be.ajouterErreur(CodeErreurBLLArticle.REGLES_ARTICLE_VILLE_ERREUR);
 		}
 	}
-
-	public void updateVente(ArticleVendu a) {
-		DAOFactory.getArticleVenduDAO().updateVente(a);
+	
+	private void validerIdArticle(Integer idArticle, BusinessException be) {
+		if (idArticle == null || idArticle <= 0) {
+			be.ajouterErreur(CodeErreurBLLArticle.REGLE_ARTICLE_ID_ERREUR);
+		}
 	}
+
+	public void updateVente(Utilisateur user, String nomArticle, String description, int categorie,
+			Integer miseAPrix, LocalDate dateDebEncheres, LocalDate dateFinEncheres, String rue, String codePostal,
+			String ville, int idArticle) throws BusinessException {
+		
+		
+		BusinessException be = new BusinessException();
+		
+		validerArticle(nomArticle, be);
+		validerDescription(description, be);
+		validerMiseAPrix(miseAPrix, be);
+		validerDateDebEncheres(dateDebEncheres, be);
+		validerDateFinEncheres(dateFinEncheres, dateDebEncheres, be);
+		validerRue(rue, be);
+		validerCodePostal(codePostal, be);
+		validerVille(ville, be);
+		validerIdArticle (idArticle, be);
+		
+		if (be.hasErreurs()) {
+			throw be;
+		}
+
+		Retrait lieuRetrait = new Retrait(rue, codePostal, ville);
+		Categorie categ = new Categorie(categorie);
+
+		ArticleVendu VenteModif = new ArticleVendu(nomArticle, description, dateDebEncheres, dateFinEncheres, miseAPrix,
+				categ, user, lieuRetrait);
+
+		DAOFactory.getArticleVenduDAO().updateVente(VenteModif);
+		
+	}
+		
+	
 	
 	/**
 	 * Liste de toutes les articles en cours d'enchère 

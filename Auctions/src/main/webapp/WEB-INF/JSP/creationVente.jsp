@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,24 +36,56 @@
 
 		<h2>Nouvelle vente</h2>
 
+	<c:choose>
+	<c:when test="${!empty requestScope.article}">
+		<form id="formulaireUpdate" method="post" action="/Auctions/UpdateSale">
+	</c:when>
+	<c:otherwise>
 		<form id="formulaireVente" method="post" action="/Auctions/NewSale">
-
+	</c:otherwise>
+	</c:choose>
+	
 			<div class=AD>
 				<div>
-					<label for="Article">Article:</label> <input type="text"
-						id="Article" name="Article">
+				<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.nomArticle }">
+					<label for="Article">Article:</label> 
+					<input type="text"
+					id="Article" name="Article" value= "${requestScope.article.nomArticle}">
+				</c:when>
+				<c:otherwise>
+					<label for="Article">Article:</label> 
+					<input type="text"
+					id="Article" name="Article">
+				</c:otherwise>
+				</c:choose>		
 				</div>
 				<br>
 
+
 				<div>
-					<label for="Description">Description:</label> <input type="text"
-						id="Description" name="Description">
+				<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.description }">
+					<label for="Description">Description:</label> 
+					<input type="text"
+					 id="Description" name="Description" value= "${requestScope.article.description}">
+				</c:when>
+				<c:otherwise>
+					<label for="Description">Description:</label>
+					<input type="text"
+					 id="Description" name="Description">
+				</c:otherwise>
+				</c:choose>
 				</div>
 			</div>
 			<br>
 
+
 			<div>
-				<label id="categorie"> Catégorie: </label> <select name="Categorie"
+			<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.categorie }">
+				<label id="categorie"> Catégorie: </label> 
+				<select name="Categorie"
 					id="categorie">
 					<option value="">Choisir une catégorie</option>
 					<option value="1">Informatique</option>
@@ -60,65 +93,141 @@
 					<option value="3">Vêtement</option>
 					<option value="4">Sport et Loisirs</option>
 				</select>
+			</c:when>
+			<c:otherwise>
+			<label id="categorie"> Catégorie: </label> 
+			<select name="Categorie"
+					id="categorie">
+					<option value="">Choisir une catégorie</option>
+					<option value="1">Informatique</option>
+					<option value="2">Ameublement</option>
+					<option value="3">Vêtement</option>
+					<option value="4">Sport et Loisirs</option>
+				</select>
+			</c:otherwise>
+			</c:choose>
 			</div>
 			<br>
 
 			<div>
-				<label for="photos">Photo de l'article:</label> <input type="file"></input>
+				<label for="photos">Photo de l'article:</label>
+				 <input type="file"></input>
 			</div>
 			<br>
 
 			<div>
-				<label for="prix">Mise à prix:</label> <input type="number" step="1"
+			<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.miseAPrix}">
+				<label for="prix">Mise à prix:</label> 
+				<input type="number" step="1"
+					value="0" min="1" name="Prix" value="${requestScope.article.miseAPrix}">
+				</c:when>
+			<c:otherwise>
+				<label for="prix">Mise à prix:</label> 
+				<input type="number" step="1"
 					value="0" min="1" name="Prix">
+			</c:otherwise>
+			</c:choose>	
 			</div>
 
 			<br>
 
 			<div>
-				<label for="DebutEnchere">Début de l'enchère:</label> <input
-					type="date" id="DebutEnchere" name="DebutEnchere">
+			<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.dateDebEncheres}">
+				<label for="DebutEnchere">Début de l'enchère:</label> 
+				<input type="date" id="DebutEnchere" name="DebutEnchere" value="${requestScope.article.dateDebEncheres}">
+				</c:when>
+			<c:otherwise>
+				<label for="DebutEnchere">Début de l'enchère:</label> 
+				<input type="date" id="DebutEnchere" name="DebutEnchere">
+			</c:otherwise>
+			</c:choose>		
 			</div>
 			<br>
 
 			<div>
-				<label for="FinEnchere">Fin de l'enchère:</label> <input type="date"
-					id="FinEnchere" name="FinEnchere">
+			<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.dateFinEncheres}">
+				<label for="FinEnchere">Fin de l'enchère:</label>
+				<input type="date"	id="FinEnchere" name="FinEnchere" value="${requestScope.article.dateFinEncheres}">
+				</c:when>
+			<c:otherwise>
+				<label for="FinEnchere">Fin de l'enchère:</label>
+				<input type="date"	id="FinEnchere" name="FinEnchere">
+			</c:otherwise>
+			</c:choose>	
 			</div>
 			<br>
 
 			<div>
 				<div>
-					<label for="Rue">Rue:</label> <input type="text" id="Rue"
-						name="Rue" required>
+				<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.rue}">
+					<label for="Rue">Rue:</label>
+					<input type="text" id="Rue" name="Rue" value= "${sessionScope.article.rue}"required>
+					</c:when>
+				<c:otherwise>
+					<label for="Rue">Rue:</label>
+					<input type="text" id="Rue" name="Rue" value= "${sessionScope.utilisateur.rue}"required>
+				</c:otherwise>
+				</c:choose>			
 				</div>
 				<br>
 
+
 				<div>
-					<label for="CodePostal">CodePostal:</label> <input  type="number"
-						id="CodePostal" name="CodePostal" required>
+				<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.codePostal}">
+					<label for="CodePostal">CodePostal:</label>
+					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.article.codePostal}"required>
+					</c:when>
+				<c:otherwise>
+					<label for="CodePostal">CodePostal:</label>
+					<input  type="number" id="CodePostal" name="CodePostal"  value= "${sessionScope.utilisateur.codePostal}"required>
+				</c:otherwise>
+				</c:choose>
 				</div>
 				<br>
 
+
 				<div>
-					<label for="Ville">Ville:</label> <input type="text" id="Ville"
-						name="Ville" required>
+				<c:choose>
+				<c:when test="${!empty requestScope.article && !empty requestScope.article.ville}">
+					<label for="Ville">Ville:</label>
+					<input type="text" id="Ville" name="Ville" value= "${sessionScope.article.ville}"required>
+					</c:when>
+				<c:otherwise>
+					<label for="Ville">Ville:</label>
+					<input type="text" id="Ville" name="Ville" value= "${sessionScope.utilisateur.ville}"required>
+				</c:otherwise>
+				</c:choose>
 				</div>
 			</div>
 			<br>
 
 
-
 			<div>
-				<button id="boutonEnregistrer" type="submit">Enregistrer</button>
-
-
+			<c:if test="${!empty requestScope.article && !empty requestScope.article.noArticle}">
+				<input type="number" id="idArticle" hidden ="hidden" name="idArticle" value="${requestScope.article.noArticle}">
+			</c:if>
 			</div>
 
-
+			<c:choose>
+			<c:when test="${!empty requestScope.article}">
+			<button id="boutonModifier" type="submit">Modifier</button>
+			</c:when>
+			<c:otherwise>
+			<button id="boutonEnregistrer" type="submit">Enregistrer</button>
+			</c:otherwise>
+			</c:choose>
+			
 		</form>
+		
+		
+		
 		<form action="/Auctions/WelcomePageUser">
-			<input id="boutonAnnuler" type="submit" value="Annuler">
+		<input id="boutonAnnuler" type="submit" value="Annuler">
 		</form>
 	</div>
 

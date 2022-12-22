@@ -25,6 +25,13 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 	private static final String INSERT = "INSERT INTO ARTICLES_VENDUS(nom_article, description, date_debut_encheres, date_fin_encheres ,prix_initial, no_utilisateur, no_categorie) VALUES (?,?,?,?,?,?,?);";
 	private static final String INSERT_RETRAIT = "INSERT INTO RETRAITS(no_article, rue, code_postal, ville) VALUES (?,?,?,?);";
 
+	//rajout distanciel
+	 private static final String UPDATE_ARTICLE = "UPDATE Articles SET nom_article = ?, description = ?, date_debut_encheres = ?, " +
+	            "date_fin_encheres = ?, prix_initial = ?, prix_vente = ?, no_categorie = ? WHERE no_article = ?";
+	 private static final String UPDATE_RETRAIT = "UPDATE Retraits SET rue = ?, code_postal = ?, ville = ? WHERE no_article = ?";
+	 private static final String DELETE_ARTICLE = "DELETE FROM Articles WHERE no_article = ?";
+	
+	
 	private static final String SELECT_ARTICLES_ALL = 
 			"SELECT no_article, nom_article, prix_vente, prix_initial, date_fin_encheres, a.no_utilisateur as no_user, pseudo"
 			+ " FROM Articles_vendus a"
@@ -224,6 +231,9 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 		return requeteAvecFiltre;
 	}
 	
+	/**
+	 * @author qswiderski2022
+	 */
 	@Override
 	public void insert(ArticleVendu newVente) throws BusinessException {
 		ResultSet rs = null;
@@ -235,27 +245,27 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 				throw be;
 			}
 
-			PreparedStatement pstmt = cnx.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, newVente.getNomArticle());
-			pstmt.setString(2, newVente.getDescription());
-			pstmt.setDate(3, Date.valueOf(newVente.getDateDebEncheres()));
-			pstmt.setDate(4, Date.valueOf(newVente.getDateFinEncheres()));
-			pstmt.setInt(5, newVente.getMiseAPrix());
-			pstmt.setInt(6, newVente.getProprietaire().getNoUtilisateur());
-			pstmt.setInt(7, newVente.getCategorie().getNoCategorie());
-			pstmt.executeUpdate();
+			PreparedStatement pstmtArticle = cnx.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+			pstmtArticle.setString(1, newVente.getNomArticle());
+			pstmtArticle.setString(2, newVente.getDescription());
+			pstmtArticle.setDate(3, Date.valueOf(newVente.getDateDebEncheres()));
+			pstmtArticle.setDate(4, Date.valueOf(newVente.getDateFinEncheres()));
+			pstmtArticle.setInt(5, newVente.getMiseAPrix());
+			pstmtArticle.setInt(6, newVente.getProprietaire().getNoUtilisateur());
+			pstmtArticle.setInt(7, newVente.getCategorie().getNoCategorie());
+			pstmtArticle.executeUpdate();
 
-			rs = pstmt.getGeneratedKeys();
+			rs = pstmtArticle.getGeneratedKeys();
 			if (rs.next()) {
 				int no_article = rs.getInt(1);
 				newVente.setNoArticle(no_article);
 
-				PreparedStatement pstmt2 = cnx.prepareStatement(INSERT_RETRAIT);
-				pstmt2.setInt(1, no_article);
-				pstmt2.setString(2, newVente.getLieuRetrait().getRue());
-				pstmt2.setString(3, newVente.getLieuRetrait().getCodePostal());
-				pstmt2.setString(4, newVente.getLieuRetrait().getVille());
-				pstmt2.executeUpdate();
+				PreparedStatement pstmtRetrait = cnx.prepareStatement(INSERT_RETRAIT);
+				pstmtRetrait.setInt(1, no_article);
+				pstmtRetrait.setString(2, newVente.getLieuRetrait().getRue());
+				pstmtRetrait.setString(3, newVente.getLieuRetrait().getCodePostal());
+				pstmtRetrait.setString(4, newVente.getLieuRetrait().getVille());
+				pstmtRetrait.executeUpdate();
 			}
 
 		}
@@ -274,10 +284,77 @@ public class ArticleVenduDAOJdbcImpl implements ArticleVenduDAO {
 		return null;
 	}
 
+	/**
+	 * @author qswiderski2022
+	 */
 	@Override
-	public void updateVente(ArticleVendu a) {
-		// TODO Auto-generated method stub
+	public void updateVente(ArticleVendu a) throws BusinessException{
 
+		        if(a.getNoArticle()==0) {
+		            BusinessException businessException = new BusinessException();
+		            businessException.ajouterErreur(CodesErreursArticleDAL.UPDATE_ARTICLE_NULL_ECHEC);
+		            throw businessException;
+		        }
+
+		        try(Connection con = ConnectionProvider.getConnection()) {
+
+		            PreparedStatement pstmtArticle = con.prepareStatement(UPDATE_ARTICLE);
+		            PreparedStatement pstmtRetrait = con.prepareStatement(UPDATE_RETRAIT);
+
+		            pstmtArticle.setString(1, a.getNomArticle());
+		            pstmtArticle.setString(2, a.getDescription());
+		            pstmtArticle.setDate(3, Date.valueOf(a.getDateDebEncheres()));
+		            pstmtArticle.setDate(4, Date.valueOf(a.getDateFinEncheres()));
+		            pstmtArticle.setInt(5, a.getMiseAPrix());
+		            pstmtArticle.setInt(6, a.getPrixVente());
+		            pstmtArticle.setInt(7, a.getCategorie().getNoCategorie());
+		            pstmtArticle.setInt(8, a.getNoArticle());
+
+		            pstmtArticle.executeUpdate();
+
+		            pstmtRetrait.setString(1, a.getLieuRetrait().getRue());
+		            pstmtRetrait.setString(2, a.getLieuRetrait().getCodePostal());
+		            pstmtRetrait.setString(3, a.getLieuRetrait().getVille());
+		            pstmtRetrait.setInt(4, a.getNoArticle());
+
+		            pstmtArticle.close();
+		            pstmtRetrait.close();
+
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		            BusinessException businessException = new BusinessException();
+		            businessException.ajouterErreur(CodesErreursArticleDAL.UPDATE_ARTICLE_ECHEC);
+		            throw businessException;
+		        }
+		    }
+	
+    
+    public void delete(ArticleVendu a) throws BusinessException{
+
+        if( a.getNoArticle()==0) {
+            BusinessException businessException = new BusinessException();
+            businessException.ajouterErreur(CodesErreursArticleDAL.DELETE_ARTICLE_NULL);
+            throw businessException;
+        }
+
+        try(Connection con = ConnectionProvider.getConnection()) {
+            PreparedStatement pstmtArticle = con.prepareStatement(DELETE_ARTICLE);
+
+            pstmtArticle.setInt(1, a.getNoArticle());
+            pstmtArticle.executeUpdate();
+
+            pstmtArticle.close();
+
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            BusinessException businessException = new BusinessException();
+            businessException.ajouterErreur(CodesErreursArticleDAL.DELETE_ARTICLE_ECHEC);
+            throw businessException;
+        }
+    }
+
+	
+	
 	}
 	
-}
+
