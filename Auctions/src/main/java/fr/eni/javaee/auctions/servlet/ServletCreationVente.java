@@ -81,10 +81,10 @@ public class ServletCreationVente extends HttpServlet {
 		}	
 		}
 		
-		
-
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/accueilUtilisateur.jsp");
-		rd.forward(request, response);
+		response.sendRedirect(request.getContextPath()+ "/WelcomePageUser");
+ 
+		//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/accueilUtilisateur.jsp");
+		//rd.forward(request, response);
 
 	}
 
