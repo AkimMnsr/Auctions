@@ -1,6 +1,8 @@
 package fr.eni.javaee.auctions.servlet;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,7 +44,13 @@ public class ServletEncherir extends HttpServlet {
 			System.out.println("[MB]Encherir-GET : listeErreurs = " + be.getListeCodesErreur());
 			request.setAttribute("erreurs", be.getListeCodesErreur());
 		}
+		if (meilleureEnchere == null) {
+			meilleureEnchere = new Enchere(0,LocalDateTime.now(), 0, null, article);
+			/*int noEnchere, LocalDateTime dateEnchere, int montantEnchere, 
+				   Utilisateur acheteur, ArticleVendu article*/
+		} 
 		request.setAttribute("enchere", meilleureEnchere);
+
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/JSP/encherir.jsp");
 		rd.forward(request, response);
@@ -62,7 +70,7 @@ public class ServletEncherir extends HttpServlet {
 			//System.out.println("[MB]Encherir-POST : proposition = " + proposition);
 		}
 		int idAcheteurPrec = 0;
-		if (request.getParameter("idAcheteurPrec") != null) {
+		if (request.getParameter("idAcheteurPrec") != null && !request.getParameter("idAcheteurPrec").isBlank()) {			
 			idAcheteurPrec = Integer.parseInt(request.getParameter("idAcheteurPrec"));
 			//System.out.println("[MB]Encherir-POST : idAcheteurPrec = " + idAcheteurPrec);
 		}

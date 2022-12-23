@@ -90,7 +90,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO {
 					cnx.setAutoCommit(false);
 						
 					//RECREDITER LE CREDIT DU PRECEDENT ACHETEUR DU MONTANT DE SON ENCHERE (= PRIX DE VENTE AVANT MAJ DE L'ARTICLE)
-					Utilisateur ancienAcheteur = DAOFactory.getUtilisateurDAO().profilUtilisateur(idAcheteurPrec);
+					Utilisateur ancienAcheteur = DAOFactory.getUtilisateurDAO().profilUtilisateur(idAcheteurPrec, cnx);
 					
 					int nouveauCredit = 0;
 					// SI MEME ACHETEUR, DEBIT-CREDIT SUR LA MEME "OPERATION"
